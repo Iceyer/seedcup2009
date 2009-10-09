@@ -24,9 +24,12 @@ public:
     }
 
     void SetDC(CDC *pdc);
+
     void Render::SetSenceSize(int x, int y);
 
     void RenderSence();
+
+    void DrawHexagon(int cx, int cy, int edgelength, double arc = 0);
 
 private:
     Render();

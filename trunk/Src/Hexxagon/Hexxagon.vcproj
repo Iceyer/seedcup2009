@@ -221,6 +221,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="GameCore"
+				>
+				<File
+					RelativePath=".\GameCore\Game.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -252,6 +260,22 @@
 				>
 				<File
 					RelativePath=".\SenceRender\SenceRender.hpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="GameCore"
+				>
+				<File
+					RelativePath=".\GameCore\Game.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCore\Judge.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCore\Map.hpp"
 					>
 				</File>
 			</Filter>
