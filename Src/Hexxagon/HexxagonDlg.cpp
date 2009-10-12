@@ -5,6 +5,7 @@
 #include "Hexxagon.h"
 #include "HexxagonDlg.h"
 #include ".\SenceRender\SenceRender.hpp"
+#include ".\GameCore\Game.hpp"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -98,6 +99,10 @@ BOOL CHexxagonDlg::OnInitDialog()
 
     // TODO: 在此添加额外的初始化代码
     SetWindowPos(NULL, 0, 0, 800, 600, SWP_SHOWWINDOW);
+
+    Hexxagon::Game::HexxagonGame().Prepare();
+
+    Hexxagon::Game::HexxagonGame().Start();
 
     return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
