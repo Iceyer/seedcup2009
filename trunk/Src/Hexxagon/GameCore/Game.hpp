@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Map.hpp"
+#include "Player.hpp"
+
 namespace Hexxagon
 {
     class Game
@@ -11,6 +14,8 @@ namespace Hexxagon
             return m_Game;
         }
 
+        void Prepare();
+
         void Start();
 
         void Pause();
@@ -21,6 +26,8 @@ namespace Hexxagon
         ~Game();
     private:
         Game();
-        static Game    m_Game;
+        static Game             m_Game;
+        MapMgr                  m_MapMgr;
+        std::vector<Player>     m_PlayerQueue;
     };
 }

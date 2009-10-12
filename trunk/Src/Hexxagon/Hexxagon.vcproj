@@ -67,7 +67,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="2"
+				GenerateManifest="true"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -228,6 +230,14 @@
 					RelativePath=".\GameCore\Game.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\GameCore\Map.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCore\Player.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -276,6 +286,10 @@
 				</File>
 				<File
 					RelativePath=".\GameCore\Map.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCore\Player.hpp"
 					>
 				</File>
 			</Filter>
