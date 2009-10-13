@@ -17,7 +17,7 @@ Game::~Game()
 
 void Game::Prepare()
 {
-    m_MapMgr.LoadMap(".\\Map\\Default.map");
+    m_MapMgr.LoadMap("H:\\Code\\seedcup2009\\trunk\\Install\\Map\\Default.map");
     //LoadPlayer();
 }
 
@@ -32,8 +32,9 @@ void Game::Start()
 
     for (; itorCurPlayer != m_PlayerQueue.end(); ++itorCurPlayer)
     {
-        (*itorCurPlayer).GetAction();
+        //(*itorCurPlayer).GetAction();
        // m_MapMgr.UpdateMap();
+        UpdateUI();
     }
 
 }
@@ -44,6 +45,11 @@ void Game::Pause()
 }
 
 void Game::End()
+{
+
+}
+
+void Game::UpdateUI()
 {
 
 }

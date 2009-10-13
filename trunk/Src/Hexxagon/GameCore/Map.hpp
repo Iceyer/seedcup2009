@@ -7,13 +7,14 @@ namespace Hexxagon
     const unsigned int MaxMapLength = 100;
     class MapItem
     {
+    public:
         enum ItemType
         {
             EMPTY,
             PLayer,
             INVALID,
         };
-        ItemType m_Type;
+        int      m_Type;
         unsigned int X;
         unsigned int Y;
     private:
@@ -32,12 +33,14 @@ namespace Hexxagon
 
         bool SaveMap(std::string strMapFileName);
 
-        const MapItem& GetMapStatus(int x, int y) const;
+        const MapItem& GetMapStatus(const int x, const int y) const;
 
-        const int MapWidth();
+        int MapWidth();
 
-        const int MapHeigth();
+        int MapHeigth();
     private:
         MapItem MapStatus[MaxMapLength][MaxMapLength];
+        int     m_iMapWidth;
+        int     m_iMapHeight;
     };
 }
