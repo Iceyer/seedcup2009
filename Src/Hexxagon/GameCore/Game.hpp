@@ -22,12 +22,14 @@ namespace Hexxagon
 
         void End();
 
+        void UpdateUI();
+
+        MapMgr      m_MapMgr;
     public:
         ~Game();
     private:
         Game();
         static Game             m_Game;
-        MapMgr                  m_MapMgr;
         std::vector<Player>     m_PlayerQueue;
     };
 }
