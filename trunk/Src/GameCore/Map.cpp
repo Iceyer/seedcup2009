@@ -28,6 +28,10 @@ const MapItem& MapMgr::GetMapStatus(const int x, const int y) const
     return MapStatus[x][y];
 }
 
+bool MapMgr::UpdateMap(const Action& action)
+{
+    return true;
+}
 
 bool MapMgr::LoadMap(std::string strMapFileName)
 {
@@ -45,6 +49,5 @@ bool MapMgr::LoadMap(std::string strMapFileName)
             MapFile>>MapStatus[i][j].m_Type;
         }
     }
-
     return true;
 }

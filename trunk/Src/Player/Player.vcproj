@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="GameCore"
-	ProjectGUID="{873E8D52-E038-41F6-994F-09377B24FAD4}"
-	RootNamespace="GameCore"
+	Name="Player"
+	ProjectGUID="{D56603A4-30CC-4484-9A9F-B399ED509735}"
+	RootNamespace="Player"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -20,7 +20,7 @@
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="2"
 			CharacterSet="2"
 			>
 			<Tool
@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;PLAYER_DLL_API_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -59,10 +59,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				OutputFile="..\..\Install\Player\$(ProjectName).dll"
+				LinkIncremental="2"
+				ModuleDefinitionFile="PlayerDll.def"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -72,6 +81,9 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -123,6 +135,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				ModuleDefinitionFile="PlayerDll.def"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -153,6 +166,10 @@
 		</Configuration>
 	</Configurations>
 	<References>
+		<ProjectReference
+			ReferencedProjectIdentifier="{873E8D52-E038-41F6-994F-09377B24FAD4}"
+			RelativePathToProject=".\GameCore\GameCore.vcproj"
+		/>
 	</References>
 	<Files>
 		<Filter
@@ -161,15 +178,33 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Jude.cpp"
+				RelativePath=".\MapStatus.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Map.cpp"
+				RelativePath=".\PlayerAction.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Player.cpp"
+				RelativePath=".\PlayerDll.def"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="头文件"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
+			<File
+				RelativePath=".\MapStatus.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayerAction.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayerDLLAPI.hpp"
 				>
 			</File>
 		</Filter>
@@ -178,22 +213,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-		</Filter>
-		<Filter
-			Name="头文件"
-			>
-			<File
-				RelativePath=".\Judge.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Map.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Player.hpp"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>
