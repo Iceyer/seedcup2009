@@ -1,5 +1,6 @@
 #pragma once
 
+#include "..\Player\PlayerAction.hpp"
 #include <vector>
 
 namespace Hexxagon
@@ -33,6 +34,8 @@ namespace Hexxagon
         bool LoadMap(std::string strMapFileName);
 
         bool SaveMap(std::string strMapFileName);
+
+        bool UpdateMap(const Action& action);
 
         const MapItem& GetMapStatus(const int x, const int y) const;
 

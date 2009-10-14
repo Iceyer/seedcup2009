@@ -22,7 +22,9 @@ namespace Hexxagon
 
         void End();
 
-        bool LoadPlayer();
+        bool LoadGame(std::string strSaveFileName);
+
+        bool LoadPlayer(std::string DllPath);
 
         void UpdateUI();
 

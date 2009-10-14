@@ -1,0 +1,4 @@
+LIBRARY	"Player"
+EXPORTS
+    GetPlayerName @1
+    GetPlayerAction @2
