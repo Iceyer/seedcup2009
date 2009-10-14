@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include <fstream>
 #include "Map.hpp"
 
@@ -48,5 +46,5 @@ bool MapMgr::LoadMap(std::string strMapFileName)
         }
     }
 
-    return false;
+    return true;
 }

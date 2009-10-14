@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "Player.hpp"
 
 using namespace Hexxagon;

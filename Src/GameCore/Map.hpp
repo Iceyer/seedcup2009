@@ -10,9 +10,10 @@ namespace Hexxagon
     public:
         enum ItemType
         {
-            EMPTY,
-            PLayer,
-            INVALID,
+            INVALID = 0,
+            EMPTY   = 1,
+            PLayer1 = 2,
+            PLayer2 = 3,
         };
         int      m_Type;
         unsigned int X;

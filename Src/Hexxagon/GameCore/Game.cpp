@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Game.hpp"
-#include "Map.hpp"
-#include "Judge.hpp"
+#include "..\..\GameCore\Judge.hpp"
 
 using namespace Hexxagon;
 
@@ -17,23 +16,23 @@ Game::~Game()
 
 void Game::Prepare()
 {
-    m_MapMgr.LoadMap("H:\\Code\\seedcup2009\\trunk\\Install\\Map\\Default.map");
-    //LoadPlayer();
+    m_MapMgr.LoadMap("..\\..\\Install\\Map\\Default.map");
+    LoadPlayer();
 }
 
 
 void Game::Start()
 {
+    /*GameLoop*/
     //Judge   judge;
-
     std::vector<Player>::const_iterator      itorCurPlayer;
 
     itorCurPlayer = m_PlayerQueue.begin();
 
     for (; itorCurPlayer != m_PlayerQueue.end(); ++itorCurPlayer)
     {
-        //(*itorCurPlayer).GetAction();
-       // m_MapMgr.UpdateMap();
+        (*itorCurPlayer).GetAction();
+        //m_MapMgr.UpdateMap();
         UpdateUI();
     }
 
@@ -47,6 +46,11 @@ void Game::Pause()
 void Game::End()
 {
 
+}
+
+bool Game::LoadPlayer()
+{
+    return false;
 }
 
 void Game::UpdateUI()

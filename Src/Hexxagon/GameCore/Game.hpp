@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Map.hpp"
-#include "Player.hpp"
+#include "..\..\GameCore\Map.hpp"
+#include "..\..\GameCore\Player.hpp"
 
 namespace Hexxagon
 {
@@ -21,6 +21,8 @@ namespace Hexxagon
         void Pause();
 
         void End();
+
+        bool LoadPlayer();
 
         void UpdateUI();
 
