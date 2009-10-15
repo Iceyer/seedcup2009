@@ -44,7 +44,7 @@ void Render::RenderSence()
     /*Draw Map*/
 
     /*Calc The Start Point*/
-    /*The background center is (500, 300)*/
+    //Holes矩阵最多有16列，18行
     int     iMapWidth = Game::HexxagonGame().m_MapMgr.CurMap()->MapWidth();
     int     iMapHeight = Game::HexxagonGame().m_MapMgr.CurMap()->MapHeigth();
     //int     iStartX = 500 - (iMapWidth - 1) * HexgaonSizeB + (iMapHeight - 1 ) * HexgaonSizeB / 2;
@@ -57,8 +57,8 @@ void Render::RenderSence()
         for (int j = 0; j < iMapHeight; ++j)
         {
             MapItem curItem = Game::HexxagonGame().m_MapMgr.CurMap()->GetMapStatus(i, j);
-            iItemX  = 200 + i*36;
-            iItemY  = i%2*15 + j*30;
+            iItemX  = 200 + (16-iMapWidth)/2*36 + i*36;
+            iItemY  = (18-iMapHeight)/2*30 + i%2*15 + j*30;
             switch (curItem.m_Type)
             {
             case MapItem::INVALID:
