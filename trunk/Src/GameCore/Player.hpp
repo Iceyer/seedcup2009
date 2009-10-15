@@ -7,6 +7,17 @@
 
 namespace Hexxagon
 {
+<<<<<<< .mine
+    enum Direction
+    {
+        UP,         //上
+        DOWN,       //下
+        LEFTUP,     //左上
+        LEFTDOWN,   //左下
+        RIGHTUP,    //右上
+        RIGHTDOWN,  //右下
+    };
+=======
 //     enum Direction
 //     {
 //         UP,
@@ -23,6 +34,7 @@ namespace Hexxagon
 //         int         YPos;
 //         Direction   Direct;
 //     };
+>>>>>>> .r8
 
     class Player
     {
