@@ -19,6 +19,12 @@ Game::Game()
 
 Game::~Game()
 {
+    PlayerQueue::iterator itorPlayer = m_PlayerQueue.begin();
+
+    for (; itorPlayer != m_PlayerQueue.end(); ++itorPlayer)
+    {
+        delete *itorPlayer;
+    }
 }
 
 void Game::Prepare()

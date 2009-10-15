@@ -9,6 +9,7 @@ Map::Map()
 
 Map::~Map()
 {
+    delete []m_pData;
 }
 
 int Map::MapWidth()
@@ -60,7 +61,11 @@ MapMgr::MapMgr()
 
 MapMgr::~MapMgr()
 {
-
+    MapList::iterator   itor = m_MapList.begin();
+    for (; itor != m_MapList.end(); ++itor)
+    {
+        delete *itor;
+    }
 }
 Map* MapMgr::CurMap()
 {

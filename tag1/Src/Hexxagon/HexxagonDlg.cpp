@@ -45,14 +45,14 @@ END_MESSAGE_MAP()
 
 // CHexxagonDlg ¶Ô»°¿ò
 
-
-
+CHexxagonDlg* CHexxagonDlg::m_pSelf;
 
 CHexxagonDlg::CHexxagonDlg(CWnd* pParent /*=NULL*/)
 : CDialog(CHexxagonDlg::IDD, pParent)
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
     memset(&m_Critical, 0, sizeof(CRITICAL_SECTION));
+    m_pSelf = this;
 }
 
 CHexxagonDlg::~CHexxagonDlg()
@@ -204,4 +204,9 @@ BOOL CHexxagonDlg::OnEraseBkgnd(CDC* pDC)
 {
     //return CDialog::OnEraseBkgnd(pDC);
     return TRUE;
+}
+
+CHexxagonDlg* CHexxagonDlg::Myself()
+{
+    return m_pSelf;
 }

@@ -8,7 +8,6 @@ namespace Hexxagon
     class Game
     {
     public:
-
         static Game& HexxagonGame()
         {
             return m_Game;
@@ -30,8 +29,10 @@ namespace Hexxagon
     public:
         ~Game();
     private:
+        typedef std::vector<Player*> PlayerQueue;
+
         Game();
-        static Game             m_Game;
-        std::vector<Player*>     m_PlayerQueue;
+        static Game     m_Game;
+        PlayerQueue     m_PlayerQueue;
     };
 }

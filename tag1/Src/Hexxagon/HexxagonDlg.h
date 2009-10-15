@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "resource.h"
 
 // CHexxagonDlg 对话框
 class CHexxagonDlg : public CDialog
@@ -21,10 +22,12 @@ protected:
 
 public:
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+    afx_msg static CHexxagonDlg *Myself();
     // 实现
 protected:
     HICON m_hIcon;
-    CRITICAL_SECTION m_Critical;
+    CRITICAL_SECTION    m_Critical;
+    static CHexxagonDlg *      m_pSelf;
 
     // 生成的消息映射函数
     virtual BOOL OnInitDialog();

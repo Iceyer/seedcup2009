@@ -61,8 +61,9 @@ namespace Hexxagon
 
         Map* AddMap(std::string strMapFileName);
     private:
-        Map*                    m_pCurMap;
-        std::vector<Map*>       m_MapList;
+        typedef std::vector<Map*>       MapList;
+        Map*          m_pCurMap;
+        MapList       m_MapList;
     };
 
 }

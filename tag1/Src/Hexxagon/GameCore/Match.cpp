@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Match.hpp"
+#include "..\HexxagonDlg.h"
 
 using namespace Hexxagon;
 
@@ -38,20 +39,21 @@ bool Match::Run()
             //m_pJudge
             UpdateUI();
         }
-        Sleep(200);
+        Sleep(500);
         action = (*m_pPlayer2).GetAction();
         if (m_pJudge->CheckAction(action, (*m_pPlayer1).GetPlayerID()))
         {
             m_pMap->UpdateMap(action);
             UpdateUI();
         }
-        Sleep(200);
+        Sleep(500);
     }
 
+    delete m_pJudge;
     return false;
 }
 
 void Match::UpdateUI()
 {
-
+    CHexxagonDlg::Myself()->Invalidate();
 }
