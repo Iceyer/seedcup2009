@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hexxagon", "Hexxagon\Hexxagon.vcproj", "{5D6FE835-AD72-425E-91D0-1C5C3D91F271}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameCore", "GameCore\GameCore.vcproj", "{873E8D52-E038-41F6-994F-09377B24FAD4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Player", "Player\Player.vcproj", "{D56603A4-30CC-4484-9A9F-B399ED509735}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D6FE835-AD72-425E-91D0-1C5C3D91F271}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5D6FE835-AD72-425E-91D0-1C5C3D91F271}.Debug|Win32.Build.0 = Debug|Win32
+		{5D6FE835-AD72-425E-91D0-1C5C3D91F271}.Release|Win32.ActiveCfg = Release|Win32
+		{5D6FE835-AD72-425E-91D0-1C5C3D91F271}.Release|Win32.Build.0 = Release|Win32
+		{873E8D52-E038-41F6-994F-09377B24FAD4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{873E8D52-E038-41F6-994F-09377B24FAD4}.Debug|Win32.Build.0 = Debug|Win32
+		{873E8D52-E038-41F6-994F-09377B24FAD4}.Release|Win32.ActiveCfg = Release|Win32
+		{873E8D52-E038-41F6-994F-09377B24FAD4}.Release|Win32.Build.0 = Release|Win32
+		{D56603A4-30CC-4484-9A9F-B399ED509735}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D56603A4-30CC-4484-9A9F-B399ED509735}.Debug|Win32.Build.0 = Debug|Win32
+		{D56603A4-30CC-4484-9A9F-B399ED509735}.Release|Win32.ActiveCfg = Release|Win32
+		{D56603A4-30CC-4484-9A9F-B399ED509735}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
