@@ -23,11 +23,21 @@ Game::~Game()
 
 void Game::Prepare()
 {
+<<<<<<< .mine
+    if (!m_MapMgr.LoadMap("..\\..\\Install\\Map\\Default.map"))
+    {
+        MessageBox(NULL,_T("无法找到要加载的地图"),_T("地图加载错误"),MB_OK);
+        return;
+    }
+    
+    LoadPlayer();
+=======
 #ifdef _DEBUG
     LoadGame("..\\..\\Install\\Save\\DefaultDebug.sav");
 #else
     LoadGame(".\\Save\\Default.sav");
 #endif
+>>>>>>> .r8
 }
 
 
