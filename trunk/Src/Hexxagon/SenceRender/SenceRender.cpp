@@ -44,14 +44,10 @@ void Render::RenderSence()
 
     /*Calc The Start Point*/
     /*The background center is (500, 300)*/
-    int     iMapWidth = Game::HexxagonGame().m_MapMgr.MapWidth();
-    int     iMapHeight = Game::HexxagonGame().m_MapMgr.MapHeigth();
-    
-    /*Draw the center point*/
-    DrawHexagon(500, 300, 10);
-
+    int     iMapWidth = Game::HexxagonGame().m_MapMgr.CurMap()->MapWidth();
+    int     iMapHeight = Game::HexxagonGame().m_MapMgr.CurMap()->MapHeigth();
     int     iStartX = 500 - (iMapWidth - 1) * HexgaonSizeB + (iMapHeight - 1 ) * HexgaonSizeB / 2;
-    int     iStartY = 300 + (iMapHeight - 1) * 3 * HexgaonSize / 4;
+    int     iStartY = 300 - (iMapHeight - 1) * 3 * HexgaonSize / 4;
 
     int     iItemX;
     int     iItemY;
@@ -59,9 +55,9 @@ void Render::RenderSence()
     {
         for (int j = 0; j < iMapHeight; ++j)
         {
-            MapItem curItem = Game::HexxagonGame().m_MapMgr.GetMapStatus(i, j);
-            iItemX  = iStartX + 2 * i * HexgaonSizeB - j * HexgaonSizeB;
-            iItemY  = iStartY - 3 * j * HexgaonSize / 2;
+            MapItem curItem = Game::HexxagonGame().m_MapMgr.CurMap()->GetMapStatus(i, j);
+            iItemX  = iStartX + 2 * j * HexgaonSizeB - i * HexgaonSizeB;
+            iItemY  = iStartY + 3 * i * HexgaonSize / 2;
             switch (curItem.m_Type)
             {
             case MapItem::INVALID:
@@ -70,8 +66,12 @@ void Render::RenderSence()
                 DrawHexagon(iItemX, iItemY, HexgaonSize);
                 break;
             case MapItem::PLayer1:
+                DrawHexagon(iItemX, iItemY, HexgaonSize);
+                DrawPlayer1(iItemX, iItemY, HexgaonSizeB / 2);
                 break;
             case MapItem::PLayer2:
+                DrawHexagon(iItemX, iItemY, HexgaonSize);
+                DrawPlayer2(iItemX, iItemY, HexgaonSizeB / 2);
                 break;
             default:
                 break;
@@ -79,6 +79,8 @@ void Render::RenderSence()
         }
     }
 
+    /*Draw the center point*/
+    DrawHexagon(500, 300, 10);
     m_pDC->SelectObject(pOldPen);
 }
 
@@ -107,4 +109,18 @@ void Render::DrawHexagon(int cx, int cy, int edgelength, double arc /*= 0*/)
     m_pDC->LineTo(cx - edgelength * gdCos30, cy - edgelength / 2);
     m_pDC->LineTo(cx - edgelength * gdCos30, cy + edgelength / 2);
     m_pDC->LineTo(cx , cy + edgelength);
+}
+
+void Render::DrawPlayer1(int cx, int cy, int edgelength)
+{
+    CBrush  Brush(gColorBlue);
+    CBrush* pOldBrush = m_pDC->SelectObject(&Brush);
+    m_pDC->Ellipse(cx - edgelength, cy - edgelength, cx + edgelength, cy + edgelength); 
+}
+
+void Render::DrawPlayer2(int cx, int cy, int edgelength)
+{
+    CBrush  Brush(gColorWhite);
+    CBrush* pOldBrush = m_pDC->SelectObject(&Brush);
+    m_pDC->Ellipse(cx - edgelength, cy - edgelength, cx + edgelength, cy + edgelength); 
 }

@@ -1,23 +1,23 @@
 #include "MapStatus.hpp"
 
-Hexxagon::MapMgr    *gpCurMapMgr;
+Hexxagon::Map    *gpCurMap;
 
-PLAYER_DLL_API void SetMapMgr(Hexxagon::MapMgr* pMapMgr)
+PLAYER_DLL_API void SetMap(Hexxagon::Map* pMap)
 {
-    gpCurMapMgr = pMapMgr;
+    gpCurMap = pMap;
 }
 
-PLAYER_DLL_API int GetMapWidth()
+int GetMapWidth()
 {
-    return  gpCurMapMgr->MapWidth();
+    return  gpCurMap->MapWidth();
 }
 
-PLAYER_DLL_API int GetMapHeight()
+int GetMapHeight()
 {
-    return  gpCurMapMgr->MapHeigth();
+    return  gpCurMap->MapHeigth();
 }
 
-PLAYER_DLL_API int GetMapStatus(int x, int y)
+int GetMapStatus(int x, int y)
 {
-    return  gpCurMapMgr->GetMapStatus(x, y).m_Type;
+    return  gpCurMap->GetMapStatus(x, y).m_Type;
 }

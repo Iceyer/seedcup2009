@@ -3,12 +3,12 @@
 using namespace Hexxagon;
 
 Judge::Judge()
-:m_pMapMgr(NULL)
+:m_pMap(NULL)
 {
 }
 
-Judge::Judge(MapMgr* pMapMgr)
-:m_pMapMgr(pMapMgr)
+Judge::Judge(Map* pMapMgr)
+:m_pMap(pMapMgr)
 {
 }
 
@@ -16,16 +16,21 @@ Judge::~Judge()
 {
 }
 
+void Judge::Prepare(Map* pMap)
+{
+    m_pMap = pMap;
+}
+
 bool Judge::CheckAction(const Action& action, int PlayerType)
 {
-    int     MapWidth = m_pMapMgr->MapWidth();
-    int     MapHeigth = m_pMapMgr->MapHeigth();
+    int     MapWidth = m_pMap->MapWidth();
+    int     MapHeigth = m_pMap->MapHeigth();
 
     if (action.PiecePosX < 0 
         || action.PiecePosX >= MapWidth
         || action.PiecePosY < 0
         || action.PiecePosY >= MapHeigth
-        || PlayerType != m_pMapMgr->GetMapStatus(action.PiecePosX, action.PiecePosY).m_Type)
+        || PlayerType != m_pMap->GetMapStatus(action.PiecePosX, action.PiecePosY).m_Type)
     {
         return false;
     }
@@ -34,8 +39,14 @@ bool Judge::CheckAction(const Action& action, int PlayerType)
         || action.DesPosX >= MapWidth
         || action.DesPosY < 0
         || action.DesPosY >= MapHeigth
-        || MapItem::EMPTY != m_pMapMgr->GetMapStatus(action.DesPosX, action.DesPosY).m_Type)
+        || MapItem::EMPTY != m_pMap->GetMapStatus(action.DesPosX, action.DesPosY).m_Type)
     {
         return false;
     }
+    return true;
+}
+
+bool Judge::IsGameEnd()
+{
+    return true;
 }

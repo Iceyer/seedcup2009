@@ -9,11 +9,15 @@ namespace Hexxagon
     {
     public:
         Judge();
-        Judge(MapMgr* pMapMgr);
+        Judge(Map* pMapMgr);
         ~Judge();
 
+        void Prepare(Map* pMap);
+
         bool CheckAction(const Action& action, int PlayerType);
+
+        bool IsGameEnd();
     private:
-        MapMgr  *m_pMapMgr;
+        Map  *m_pMap;
     };
 }

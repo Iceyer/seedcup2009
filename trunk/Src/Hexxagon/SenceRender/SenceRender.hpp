@@ -31,6 +31,11 @@ public:
 
     void DrawHexagon(int cx, int cy, int edgelength, double arc = 0);
 
+    void Render::DrawPlayer1(int cx, int cy, int edgelength);
+    
+    void Render::DrawPlayer2(int cx, int cy, int edgelength);
+
+
 private:
     Render();
 
