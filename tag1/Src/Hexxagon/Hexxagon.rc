@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 中文(中华人民共和国) resources
+// Chinese (P.R.C.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
 #ifdef _WIN32
@@ -165,6 +165,14 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// Bitmap
+//
+
+IDB_BITMAP1             BITMAP                  "d:\\My Documents\\Visual Studio 2008\\Projects\\seedCup2\\Install\\hole1.bmp"
+IDB_BITMAP2             BITMAP                  "d:\\My Documents\\Visual Studio 2008\\Projects\\seedCup2\\Install\\hole2.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
@@ -173,7 +181,7 @@ BEGIN
     IDS_ABOUTBOX            "关于 Hexxagon(&A)..."
 END
 
-#endif    // 中文(中华人民共和国) resources
+#endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
