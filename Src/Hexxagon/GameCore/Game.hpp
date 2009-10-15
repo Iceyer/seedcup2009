@@ -26,14 +26,12 @@ namespace Hexxagon
 
         bool LoadPlayer(std::string DllPath);
 
-        void UpdateUI();
-
         MapMgr      m_MapMgr;
     public:
         ~Game();
     private:
         Game();
         static Game             m_Game;
-        std::vector<Player>     m_PlayerQueue;
+        std::vector<Player*>     m_PlayerQueue;
     };
 }

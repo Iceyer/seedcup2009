@@ -52,6 +52,12 @@ CHexxagonDlg::CHexxagonDlg(CWnd* pParent /*=NULL*/)
 : CDialog(CHexxagonDlg::IDD, pParent)
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+    memset(&m_Critical, 0, sizeof(CRITICAL_SECTION));
+}
+
+CHexxagonDlg::~CHexxagonDlg()
+{
+    ::DeleteCriticalSection(&m_Critical);
 }
 
 void CHexxagonDlg::DoDataExchange(CDataExchange* pDX)
@@ -94,14 +100,14 @@ BOOL CHexxagonDlg::OnInitDialog()
 
     // 设置此对话框的图标。当应用程序主窗口不是对话框时，框架将自动
     //  执行此操作
-    SetIcon(m_hIcon, TRUE);			// 设置大图标
-    SetIcon(m_hIcon, FALSE);		// 设置小图标
+    SetIcon(m_hIcon, TRUE);         // 设置大图标
+    SetIcon(m_hIcon, FALSE);        // 设置小图标
 
     // TODO: 在此添加额外的初始化代码
     SetWindowPos(NULL, 0, 0, 800, 600, SWP_SHOWWINDOW);
+    ::InitializeCriticalSection(&m_Critical);
 
     Hexxagon::Game::HexxagonGame().Prepare();
-
     Hexxagon::Game::HexxagonGame().Start();
 
     return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
@@ -167,11 +173,13 @@ void CHexxagonDlg::OnPaint()
         CPen lcPen(PS_SOLID, 1, gColorGreen);
         CPen *lcpOldPen = MemDC.SelectObject(&lcPen);
 
+        EnterCriticalSection(&m_Critical);
         Render::SRender().SetDC(&MemDC);
         Render::SRender().SetSenceSize(lcrcClient.Width(), lcrcClient.Height());
 
         Render::SRender().RenderSence();
 
+        LeaveCriticalSection(&m_Critical);
         MemDC.SelectObject(lcpOldPen);
 
         dc.BitBlt(lcrcClient.left, lcrcClient.top, 

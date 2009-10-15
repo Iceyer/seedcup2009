@@ -1,0 +1,3 @@
+Map=".\Map\Default.map"
+Player1=".\Player\Player.dll"
+Player2=".\Player\Player.dll"

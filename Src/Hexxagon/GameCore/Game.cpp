@@ -1,9 +1,11 @@
 #include "stdafx.h"
+#include <process.h>
 #include <windows.h>
 
 #include "Game.hpp"
 #include "..\..\GameCore\Judge.hpp"
 #include "..\..\Player\PlayerAction.hpp"
+#include "Match.hpp"
 
 #include <fstream>
 
@@ -21,28 +23,25 @@ Game::~Game()
 
 void Game::Prepare()
 {
-    LoadGame("..\\..\\Install\\Save\\Default.sav");
-    m_MapMgr.LoadMap("..\\..\\Install\\Map\\Default.map");
+#ifdef _DEBUG
+    LoadGame("..\\..\\Install\\Save\\DefaultDebug.sav");
+#else
+    LoadGame(".\\Save\\Default.sav");
+#endif
 }
 
 
 void Game::Start()
 {
     /*GameLoop*/
-    Judge   judge;
-    Action  action;
-    std::vector<Player>::const_iterator      itorCurPlayer;
-
+    Judge* pJudge = new Judge(m_MapMgr.CurMap());
+    std::vector<Player*>::iterator      itorCurPlayer;
     itorCurPlayer = m_PlayerQueue.begin();
+    Player* pPlayer1 = (*itorCurPlayer++);
+    Player* pPlayer2 = (*itorCurPlayer);
 
-    for (; itorCurPlayer != m_PlayerQueue.end(); ++itorCurPlayer)
-    {
-        action = (*itorCurPlayer).GetAction();
-        //judge.CheckAction(action, (*itorCurPlayer).;
-        m_MapMgr.UpdateMap(action);
-        UpdateUI();
-    }
-
+    Match* pCurMatch = new Match(m_MapMgr.CurMap(), pPlayer1, pPlayer2, pJudge);
+    _beginthread(Hexxagon::RunMatch, 0 , pCurMatch);
 }
 
 void Game::Pause()
@@ -74,9 +73,15 @@ bool Game::LoadGame(std::string strSaveFileName)
         pos = line.find('=');
         key = line.substr(0, pos);
         val = line.substr(pos + 2, line.length() - pos - 3);
+
         if (!key.compare("Player1") || !key.compare("Player2"))
         {
             LoadPlayer(val);
+        }
+
+        if (!key.compare("Map"))
+        {
+          m_MapMgr.SetCurMap(m_MapMgr.AddMap(val));
         }
     }
     return true;
@@ -85,28 +90,8 @@ bool Game::LoadGame(std::string strSaveFileName)
 bool Game::LoadPlayer(std::string DllPath)
 {
     //Load dll
-    HINSTANCE hinst=::LoadLibrary(DllPath.c_str()); 
-    if (NULL == hinst)
-    {
-        return false;
-    }
-    //Fill the Player Information
-    pGetPlayerName pFuncPlayerName = NULL;
-    pFuncPlayerName = (pGetPlayerName)GetProcAddress(hinst, strGetPlayerName.c_str());
-
-    pGetPlayerActionFunc pFuncPlayerAction = NULL;
-    pFuncPlayerAction = (pGetPlayerActionFunc)GetProcAddress(hinst, strGetPlayerAction.c_str());
-
-    Player NewPlayer;
-    NewPlayer.SetName(pFuncPlayerName());
-    NewPlayer.SetActionFunc(pFuncPlayerAction);
-
+    Player* pNewPlayer = new Player(DllPath);
     //Add a Player
-    m_PlayerQueue.push_back(NewPlayer);
+    m_PlayerQueue.push_back(pNewPlayer);
     return  true;
-}
-
-void Game::UpdateUI()
-{
-
 }

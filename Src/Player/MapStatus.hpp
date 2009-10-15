@@ -3,10 +3,14 @@
 #include "PlayerDLLAPI.hpp"
 #include "..\GameCore\Map.hpp"
 
-PLAYER_DLL_API void SetMapMgr(Hexxagon::MapMgr* pMapMgr);
+PLAYER_DLL_API void SetMap(Hexxagon::Map* pMap);
 
-PLAYER_DLL_API int GetMapWidth();
+typedef void (*pSetMap) (Hexxagon::Map*);
 
-PLAYER_DLL_API int GetMapHeight();
+const std::string strSetMapFunc = "SetMap";
 
-PLAYER_DLL_API int GetMapStatus(const int x, const int y);
+int GetMapWidth();
+
+int GetMapHeight();
+
+int GetMapStatus(const int x, const int y);
