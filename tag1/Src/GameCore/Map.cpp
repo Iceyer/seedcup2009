@@ -41,7 +41,7 @@ bool Map::LoadMap(std::string strMapFileName)
     MapFile>>m_iMapWidth;
     MapFile>>m_iMapHeight;
 
-    m_pData = new MapItem[m_iMapWidth*m_iMapHeight];
+    m_pData = new MapItem[m_iMapWidth * m_iMapHeight];
 
     for (int i = 0; i < m_iMapWidth; ++i)
     {
@@ -50,6 +50,7 @@ bool Map::LoadMap(std::string strMapFileName)
             MapFile>>m_pData[i * m_iMapWidth + j].m_Type;
         }
     }
+    MapFile.close();
     return true;
 }
 

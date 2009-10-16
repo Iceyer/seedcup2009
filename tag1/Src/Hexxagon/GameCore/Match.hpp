@@ -19,6 +19,12 @@ namespace Hexxagon
 
         void UpdateUI();
 
+        const Player& GetPlayer(int PlayerID);
+
+        const Judge& GetJudge();
+
+        const Map&  GetMap();
+
     private:
         Map*        m_pMap;
         Player*     m_pPlayer1;

@@ -5,7 +5,6 @@
 #include "Game.hpp"
 #include "..\..\GameCore\Judge.hpp"
 #include "..\..\Player\PlayerAction.hpp"
-#include "Match.hpp"
 
 #include <fstream>
 
@@ -14,6 +13,7 @@ using namespace Hexxagon;
 Game Game::m_Game;
 
 Game::Game()
+: m_pCurMatch(NULL)
 {
 }
 
@@ -47,6 +47,7 @@ void Game::Start()
     Player* pPlayer2 = (*itorCurPlayer);
 
     Match* pCurMatch = new Match(m_MapMgr.CurMap(), pPlayer1, pPlayer2, pJudge);
+    m_pCurMatch = pCurMatch;
     _beginthread(Hexxagon::RunMatch, 0 , pCurMatch);
 }
 
@@ -58,6 +59,11 @@ void Game::Pause()
 void Game::End()
 {
 
+}
+
+Match* Game::CurMatch()
+{
+    return m_pCurMatch;
 }
 
 bool Game::LoadGame(std::string strSaveFileName)
@@ -90,6 +96,7 @@ bool Game::LoadGame(std::string strSaveFileName)
           m_MapMgr.SetCurMap(m_MapMgr.AddMap(val));
         }
     }
+    SaveFile.close();
     return true;
 }
 

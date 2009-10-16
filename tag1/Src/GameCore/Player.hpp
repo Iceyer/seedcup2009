@@ -37,7 +37,7 @@ namespace Hexxagon
 
         void SetName(std::string name);
 
-        std::string GetName();
+        std::string GetName() const;
 
         void SetPlayerID(int id);
 

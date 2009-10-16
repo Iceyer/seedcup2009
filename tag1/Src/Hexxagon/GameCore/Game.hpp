@@ -2,6 +2,7 @@
 
 #include "..\..\GameCore\Map.hpp"
 #include "..\..\GameCore\Player.hpp"
+#include "Match.hpp"
 
 namespace Hexxagon
 {
@@ -21,18 +22,22 @@ namespace Hexxagon
 
         void End();
 
+        Match* CurMatch();
+
         bool LoadGame(std::string strSaveFileName);
 
+        MapMgr      m_MapMgr;
+
+        ~Game();
+    protected:
         bool LoadPlayer(std::string DllPath);
 
-        MapMgr      m_MapMgr;
-    public:
-        ~Game();
     private:
         typedef std::vector<Player*> PlayerQueue;
 
         Game();
         static Game     m_Game;
         PlayerQueue     m_PlayerQueue;
+        Match*          m_pCurMatch;
     };
 }

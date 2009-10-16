@@ -16,7 +16,9 @@ namespace Hexxagon
 
         bool CheckAction(const Action& action, int PlayerType);
 
-        bool IsGameEnd();
+        int GetScore(int PlayerID) const;
+
+        bool IsGameEnd() const;
     private:
         Map  *m_pMap;
     };

@@ -29,12 +29,13 @@ public:
 
     void RenderSence();
 
+    void DrawGameInfo();
+
     void DrawHexagon(int cx, int cy);//, int edgelength, MapItem::ItemType itype = MapItem::ItemType::EMPTY);
 
     void Render::DrawPlayer1(int cx, int cy, int edgelength);
-    
-    void Render::DrawPlayer2(int cx, int cy, int edgelength);
 
+    void Render::DrawPlayer2(int cx, int cy, int edgelength);
 
 private:
     Render();
@@ -44,4 +45,6 @@ private:
     CDC     *m_pDC;
     int     m_Width;
     int     m_Height;
+
+    CFont   m_PlayerInfoFont;
 };

@@ -46,7 +46,13 @@ bool Judge::CheckAction(const Action& action, int PlayerType)
     return true;
 }
 
-bool Judge::IsGameEnd()
+int Judge::GetScore(int PlayerID) const
+{
+    return 0;
+}
+
+
+bool Judge::IsGameEnd() const
 {
     return true;
 }

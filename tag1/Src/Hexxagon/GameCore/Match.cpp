@@ -53,6 +53,28 @@ bool Match::Run()
     return false;
 }
 
+const Player& Match::GetPlayer(int PlayerID)
+{
+    if (MapItem::PLayer1 == PlayerID)
+    {
+        return *m_pPlayer1;
+    }
+    else
+    {
+        return *m_pPlayer2;
+    }
+}
+
+const Judge& Match::GetJudge()
+{
+    return *m_pJudge;
+}
+
+const Map& Match::GetMap()
+{
+    return *m_pMap;
+}
+
 void Match::UpdateUI()
 {
     CHexxagonDlg::Myself()->Invalidate();

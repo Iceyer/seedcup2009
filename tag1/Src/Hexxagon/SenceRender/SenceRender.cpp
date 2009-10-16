@@ -13,11 +13,30 @@ Render Render::m_Render;
 
 Render::Render()
 {
+    LOGFONT                              font;
+
+    font.lfHeight           = - 20;
+    font.lfWidth            = 0;
+    font.lfEscapement       = 0;
+    font.lfOrientation      = 0;
+    font.lfWeight           = FW_THIN;
+    font.lfItalic           = FALSE;
+    font.lfUnderline        = FALSE;
+    font.lfStrikeOut        = FALSE;
+    font.lfOutPrecision     = OUT_TT_PRECIS;
+    font.lfClipPrecision    = CLIP_DEFAULT_PRECIS;
+    font.lfQuality          = DEFAULT_QUALITY;
+    font.lfPitchAndFamily   = DEFAULT_PITCH;
+    font.lfOutPrecision     = OUT_TT_PRECIS;
+    font.lfPitchAndFamily   = DEFAULT_PITCH | FF_DONTCARE;
+    ::strncpy_s(font.lfFaceName, _T("微软雅黑"), 31);
+
+    m_PlayerInfoFont.CreateFontIndirect(&font);
 }
 
 Render::~Render()
 {
-
+    m_PlayerInfoFont.DeleteObject();
 }
 
 void Render::SetDC(CDC *pdc)
@@ -34,15 +53,10 @@ void Render::SetSenceSize(int width, int height)
 void Render::RenderSence()
 {
     using namespace Hexxagon;
-    CPen RedPen(PS_SOLID, 3, gColorRed);
-    CPen* pOldPen = m_pDC->SelectObject(&RedPen);
-
     /*Draw Game Information*/
-    m_pDC->MoveTo(198,0);
-    m_pDC->LineTo(198, m_Height);
+    DrawGameInfo();
 
     /*Draw Map*/
-
     /*Calc The Start Point*/
     //Holes矩阵最多有16列，18行
     int     iMapWidth = Game::HexxagonGame().m_MapMgr.CurMap()->MapWidth();
@@ -83,7 +97,6 @@ void Render::RenderSence()
 
     /*Draw the center point*/
     //DrawHexagon(500, 300, 10);
-    m_pDC->SelectObject(pOldPen);
 }
 
 void Render::DrawHexagon(int cx, int cy)//, int edgelength, MapItem::ItemType itype /*= MapItem::ItemType::EMPTY*/)
@@ -142,4 +155,49 @@ void Render::DrawPlayer2(int cx, int cy, int edgelength)
     CBrush  Brush(gColorWhite);
     CBrush* pOldBrush = m_pDC->SelectObject(&Brush);
     m_pDC->Ellipse(cx - edgelength, cy - edgelength, cx + edgelength, cy + edgelength); 
+}
+
+void Render::DrawGameInfo()
+{
+    using namespace Hexxagon;
+    int         Xoffset = 20;
+    int         Yoffset = 20;
+    int         Xborder = 200;
+    int         YDiv = 30;
+    int         YPos = Yoffset;
+    CFont*      pOldFont = m_pDC->SelectObject(&m_PlayerInfoFont);
+    CPen RedPen(PS_SOLID, 5, gColorBlue);
+    CPen* pOldPen = m_pDC->SelectObject(&RedPen);
+    CString     strInfo;
+
+    m_pDC->MoveTo(0 + 2, 0 + 2);
+    m_pDC->LineTo(Xborder - 2,0 + 2);
+    m_pDC->LineTo(Xborder - 2, m_Height - 2);
+    m_pDC->LineTo(0 + 2, m_Height - 2);
+    m_pDC->LineTo(0 + 2, 0 + 2);
+
+    CPen GreenPen(PS_SOLID, 5, gColorGreen);
+    m_pDC->SelectObject(&GreenPen);
+    m_pDC->MoveTo(Xborder + 3, 0 +2);
+    m_pDC->LineTo(m_Width - 2, 0 + 2);
+    m_pDC->LineTo(m_Width - 2, m_Height - 2);
+    m_pDC->LineTo(Xborder + 3, m_Height - 2);
+    m_pDC->LineTo(Xborder + 3, 0 + 2);
+
+    m_pDC->SetTextColor(RGB(200, 200, 200));
+    m_pDC->TextOut(Xoffset, YPos, _T("Player1"));
+    YPos += 30;
+    m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
+    YPos += 30;
+    m_pDC->TextOut(Xoffset, YPos, Game::HexxagonGame().CurMatch()->GetPlayer(MapItem::PLayer1).GetName().c_str());
+    YPos += 30;
+    m_pDC->TextOut(Xoffset, YPos, _T("Score:"));
+    strInfo.Format(_T("%d"), Game::HexxagonGame().CurMatch()->GetJudge().GetScore(MapItem::PLayer1));
+    YPos += 30;
+    m_pDC->TextOut(Xoffset, YPos, strInfo);
+    YPos += 30;
+    m_pDC->TextOut(Xoffset,YPos, Game::HexxagonGame().CurMatch()->GetPlayer(MapItem::PLayer2).GetName().c_str());
+
+    m_pDC->SelectObject(pOldFont);
+    m_pDC->SelectObject(pOldPen);
 }
