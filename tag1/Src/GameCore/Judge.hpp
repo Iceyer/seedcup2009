@@ -14,12 +14,15 @@ namespace Hexxagon
 
         void Prepare(Map* pMap);
 
-        bool CheckAction(const Action& action, int PlayerType);
+        int CheckAction(const Action& action, int PlayerType);
 
         int GetScore(int PlayerID) const;
 
-        bool IsGameEnd() const;
+        bool IsGameEnd();
     private:
         Map  *m_pMap;
+        int  m_totalHoles;
+        int  m_stonesOfPlayer1;
+        int  m_stonesOfPlayer2;
     };
 }

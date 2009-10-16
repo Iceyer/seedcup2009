@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Match.hpp"
-#include "..\HexxagonDlg.h"
 
 using namespace Hexxagon;
 
@@ -30,26 +29,31 @@ bool Match::Run()
     m_pJudge->Prepare(m_pMap);
 
     Action  action;
+    int FailorInorOut; //0表示检查结果为失败，1表示移动到内环，2表示移动到外环
     while (m_pJudge->IsGameEnd())
     {
         action = (*m_pPlayer1).GetAction();
-        if (m_pJudge->CheckAction(action, (*m_pPlayer1).GetPlayerID()))
+        FailorInorOut = m_pJudge->CheckAction(action, (*m_pPlayer1).GetPlayerID());
+        if (FailorInorOut)
         {
-            m_pMap->UpdateMap(action);
-            //m_pJudge
+            m_pMap->UpdateMap(action,FailorInorOut);
             UpdateUI();
         }
-        Sleep(500);
+        Sleep(200);
+        if (!m_pJudge->IsGameEnd())
+        {
+            break;
+        }
         action = (*m_pPlayer2).GetAction();
-        if (m_pJudge->CheckAction(action, (*m_pPlayer1).GetPlayerID()))
+        FailorInorOut = m_pJudge->CheckAction(action, (*m_pPlayer2).GetPlayerID());
+        if (FailorInorOut)
         {
-            m_pMap->UpdateMap(action);
+            m_pMap->UpdateMap(action,FailorInorOut);
             UpdateUI();
         }
-        Sleep(500);
+        Sleep(200);
     }
 
-    delete m_pJudge;
     return false;
 }
 
@@ -77,5 +81,5 @@ const Map& Match::GetMap()
 
 void Match::UpdateUI()
 {
-    CHexxagonDlg::Myself()->Invalidate();
+    AfxGetApp()->m_pMainWnd->Invalidate();
 }

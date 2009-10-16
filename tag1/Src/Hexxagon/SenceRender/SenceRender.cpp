@@ -2,8 +2,6 @@
 #include "../../Hexxagon/resource.h"
 
 #include "SenceRender.hpp"
-#include "../../GameCore/Map.hpp"
-#include "../GameCore/Game.hpp"
 
 const double gdCos30 = 0.86602540378443864676372317075294;
 const double HexgaonSize = 20;
@@ -58,11 +56,10 @@ void Render::RenderSence()
 
     /*Draw Map*/
     /*Calc The Start Point*/
-    //Holes矩阵最多有16列，18行
-    int     iMapWidth = Game::HexxagonGame().m_MapMgr.CurMap()->MapWidth();
-    int     iMapHeight = Game::HexxagonGame().m_MapMgr.CurMap()->MapHeigth();
-    //int     iStartX = 500 - (iMapWidth - 1) * HexgaonSizeB + (iMapHeight - 1 ) * HexgaonSizeB / 2;
-    //int     iStartY = 300 - (iMapHeight - 1) * 3 * HexgaonSize / 4;
+    const int     iMapWidth = Game::HexxagonGame().m_MapMgr.CurMap()->MapWidth();
+    const int     iMapHeight = Game::HexxagonGame().m_MapMgr.CurMap()->MapHeigth();
+    const int     iStartX = 468 -18*iMapWidth; //原表达式为 200 + (16-iMapWidth)/2*36;
+    const int     iStartY = 285 + (15-30*iMapHeight+15*iMapWidth)/2; //原表达式为 (600 - iMapHeight*30 - (iMapWidth-1)*15)/2 + (iMapWidth-1)*15;
 
     int     iItemX;
     int     iItemY;
@@ -71,23 +68,20 @@ void Render::RenderSence()
         for (int j = 0; j < iMapHeight; ++j)
         {
             MapItem curItem = Game::HexxagonGame().m_MapMgr.CurMap()->GetMapStatus(i, j);
-            iItemX  = 200 + (16-iMapWidth)/2*36 + i*36;
-            iItemY  = (18-iMapHeight)/2*30 + i%2*15 + j*30;
+            iItemX  = iStartX + i*36;
+            iItemY  = iStartY - i*15 + j*30;
             switch (curItem.m_Type)
             {
             case MapItem::INVALID:
                 break;
             case MapItem::EMPTY:
-                DrawHexagon(iItemX,iItemY);//,0,curItem.m_Type);
-                //DrawHexagon(iItemX, iItemY, 0);
+                DrawHexagon(iItemX,iItemY,curItem.m_Type);
                 break;
             case MapItem::PLayer1:
-                //DrawHexagon(iItemX, iItemY, HexgaonSize);
-                //DrawPlayer1(iItemX, iItemY, HexgaonSizeB / 2);
+                DrawHexagon(iItemX,iItemY,curItem.m_Type);
                 break;
             case MapItem::PLayer2:
-                //DrawHexagon(iItemX, iItemY, HexgaonSize);
-                //DrawPlayer2(iItemX, iItemY, HexgaonSizeB / 2);
+                DrawHexagon(iItemX,iItemY,curItem.m_Type);
                 break;
             default:
                 break;
@@ -95,14 +89,28 @@ void Render::RenderSence()
         }
     }
 
-    /*Draw the center point*/
-    //DrawHexagon(500, 300, 10);
 }
 
-void Render::DrawHexagon(int cx, int cy)//, int edgelength, MapItem::ItemType itype /*= MapItem::ItemType::EMPTY*/)
+void Render::DrawHexagon(int cx, int cy, Hexxagon::MapItem::ItemType iType)
 {
+    using namespace Hexxagon;
     CBitmap hole1,hole2;
-    if (!(hole1.LoadBitmap(IDB_BITMAP1)&&hole2.LoadBitmap(IDB_BITMAP2)))
+    bool loadImageTag;
+    switch (iType)
+    {
+    case MapItem::EMPTY:
+        loadImageTag = hole1.LoadBitmap(IDB_BITMAP1)&&hole2.LoadBitmap(IDB_BITMAP2);
+        break;
+    case MapItem::PLayer1:
+        loadImageTag = hole1.LoadBitmap(IDB_BITMAP3)&&hole2.LoadBitmap(IDB_BITMAP2);
+        break;
+    case MapItem::PLayer2:
+        loadImageTag = hole1.LoadBitmap(IDB_BITMAP4)&&hole2.LoadBitmap(IDB_BITMAP2);
+        break;
+    default:
+        break;
+    }
+    if (!loadImageTag)
     {
         if (MessageBox(NULL,"无法找到需要加载的位图","加载位图失败",MB_OK) == IDOK)
         {
@@ -113,48 +121,25 @@ void Render::DrawHexagon(int cx, int cy)//, int edgelength, MapItem::ItemType it
     CDC cdctemp;
     cdctemp.CreateCompatibleDC(NULL);
     cdctemp.SelectObject(&hole2);
-    m_pDC->BitBlt(cx,cy,50,30,&cdctemp,0,0,SRCPAINT);
+    m_pDC->BitBlt(cx,cy,50,30,&cdctemp,0,0,SRCPAINT);//与源位图与目标位图做“或”运算
 
     cdctemp.SelectObject(&hole1);
-    m_pDC->BitBlt(cx,cy,50,30,&cdctemp,0,0,SRCAND);
+    m_pDC->BitBlt(cx,cy,50,30,&cdctemp,0,0,SRCAND);//与源位图与目标位图做“与”运算
     cdctemp.DeleteDC();
-    //m_pDC->BeginPath();
-    //m_pDC->MoveTo(cx, cy + edgelength);
-    //m_pDC->LineTo(cx + edgelength * gdCos30, cy + edgelength / 2);
-    //m_pDC->LineTo(cx + edgelength * gdCos30, cy - edgelength / 2);
-    //m_pDC->LineTo(cx , cy - edgelength);
-    //m_pDC->LineTo(cx - edgelength * gdCos30, cy - edgelength / 2);
-    //m_pDC->LineTo(cx - edgelength * gdCos30, cy + edgelength / 2);
-    //m_pDC->LineTo(cx , cy + edgelength);
-    //m_pDC->EndPath();
-    //CRgn rgn;
-    //rgn.CreateFromPath(m_pDC);
-    //m_pDC->InvertRgn(&rgn);
-
-    //CBrush  EmptyItemBrush(gColorGreen);
-    //m_pDC->FillRgn(&rgn, &EmptyItemBrush);
-
-    //m_pDC->MoveTo(cx, cy + edgelength);
-    //m_pDC->LineTo(cx + edgelength * gdCos30, cy + edgelength / 2);
-    //m_pDC->LineTo(cx + edgelength * gdCos30, cy - edgelength / 2);
-    //m_pDC->LineTo(cx , cy - edgelength);
-    //m_pDC->LineTo(cx - edgelength * gdCos30, cy - edgelength / 2);
-    //m_pDC->LineTo(cx - edgelength * gdCos30, cy + edgelength / 2);
-    //m_pDC->LineTo(cx , cy + edgelength);
 }
 
 void Render::DrawPlayer1(int cx, int cy, int edgelength)
 {
-    CBrush  Brush(gColorBlue);
+    /*CBrush  Brush(gColorBlue);
     CBrush* pOldBrush = m_pDC->SelectObject(&Brush);
-    m_pDC->Ellipse(cx - edgelength, cy - edgelength, cx + edgelength, cy + edgelength); 
+    m_pDC->Ellipse(cx - edgelength, cy - edgelength, cx + edgelength, cy + edgelength); */
 }
 
 void Render::DrawPlayer2(int cx, int cy, int edgelength)
 {
-    CBrush  Brush(gColorWhite);
+    /*CBrush  Brush(gColorWhite);
     CBrush* pOldBrush = m_pDC->SelectObject(&Brush);
-    m_pDC->Ellipse(cx - edgelength, cy - edgelength, cx + edgelength, cy + edgelength); 
+    m_pDC->Ellipse(cx - edgelength, cy - edgelength, cx + edgelength, cy + edgelength); */
 }
 
 void Render::DrawGameInfo()

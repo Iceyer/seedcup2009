@@ -3,8 +3,8 @@
 #include <windows.h>
 
 #include "Game.hpp"
-#include "..\..\GameCore\Judge.hpp"
 #include "..\..\Player\PlayerAction.hpp"
+
 
 #include <fstream>
 
@@ -13,18 +13,31 @@ using namespace Hexxagon;
 Game Game::m_Game;
 
 Game::Game()
-: m_pCurMatch(NULL)
 {
 }
 
 Game::~Game()
 {
-    PlayerQueue::iterator itorPlayer = m_PlayerQueue.begin();
-
-    for (; itorPlayer != m_PlayerQueue.end(); ++itorPlayer)
+    if (m_pCurMatch)
     {
-        delete *itorPlayer;
+        delete m_pCurMatch;
+        m_pCurMatch = NULL;
     }
+    if (m_pJudge)
+    {
+        delete m_pJudge; 
+        m_pJudge = NULL;
+    }
+    while(m_PlayerQueue.back())
+    {
+        delete m_PlayerQueue.back();
+        m_PlayerQueue.pop_back();
+    }
+}
+
+Match* Game::CurMatch()
+{
+    return m_pCurMatch;
 }
 
 void Game::Prepare()
@@ -40,30 +53,23 @@ void Game::Prepare()
 void Game::Start()
 {
     /*GameLoop*/
-    Judge* pJudge = new Judge(m_MapMgr.CurMap());
+    m_pJudge = new Judge(m_MapMgr.CurMap());
     std::vector<Player*>::iterator      itorCurPlayer;
     itorCurPlayer = m_PlayerQueue.begin();
     Player* pPlayer1 = (*itorCurPlayer++);
     Player* pPlayer2 = (*itorCurPlayer);
 
-    Match* pCurMatch = new Match(m_MapMgr.CurMap(), pPlayer1, pPlayer2, pJudge);
-    m_pCurMatch = pCurMatch;
-    _beginthread(Hexxagon::RunMatch, 0 , pCurMatch);
+    m_pCurMatch = new Match(m_MapMgr.CurMap(), pPlayer1, pPlayer2, m_pJudge);
+    _beginthread(Hexxagon::RunMatch, 0 , m_pCurMatch);
+
 }
 
 void Game::Pause()
 {
-
 }
 
 void Game::End()
 {
-
-}
-
-Match* Game::CurMatch()
-{
-    return m_pCurMatch;
 }
 
 bool Game::LoadGame(std::string strSaveFileName)
@@ -96,6 +102,7 @@ bool Game::LoadGame(std::string strSaveFileName)
           m_MapMgr.SetCurMap(m_MapMgr.AddMap(val));
         }
     }
+
     SaveFile.close();
     return true;
 }

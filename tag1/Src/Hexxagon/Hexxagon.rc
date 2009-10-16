@@ -170,6 +170,8 @@ END
 
 IDB_BITMAP1             BITMAP                  "..\\..\\Install\\hole1.bmp"
 IDB_BITMAP2             BITMAP                  "..\\..\\Install\\hole2.bmp"
+IDB_BITMAP3             BITMAP                  "d:\\My Documents\\Visual Studio 2008\\Projects\\seedCup2\\Install\\holeBlue.bmp"
+IDB_BITMAP4             BITMAP                  "d:\\My Documents\\Visual Studio 2008\\Projects\\seedCup2\\Install\\holeRed.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

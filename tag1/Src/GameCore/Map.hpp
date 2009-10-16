@@ -16,11 +16,11 @@ namespace Hexxagon
             PLayer1 = 2,
             PLayer2 = 3,
         };
-        int      m_Type;
-        unsigned int X;
-        unsigned int Y;
-    private:
-        void * m_pOwener;
+        ItemType     m_Type;
+        //unsigned int X;
+        //unsigned int Y;
+    //private:
+       // void * m_pOwener;
     };
 
     class Map
@@ -34,7 +34,7 @@ namespace Hexxagon
 
         bool SaveMap(std::string strMapFileName);
 
-        bool UpdateMap(const Action& action);
+        bool UpdateMap(const Action& action, int FailorInorOut);
 
         const MapItem& GetMapStatus(const int x, const int y) const;
 

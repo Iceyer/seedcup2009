@@ -51,7 +51,7 @@ namespace Hexxagon
         void SetActionFunc(pGetPlayerActionFunc pFunc);
 
     private:
-        HINSTANCE m_HINST;
+        HINSTANCE               m_HINST;
         std::string             m_Name;
         int                     m_ID;
         pGetPlayerActionFunc    m_pActionFunc;

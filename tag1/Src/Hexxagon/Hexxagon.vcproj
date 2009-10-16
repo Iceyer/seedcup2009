@@ -312,6 +312,14 @@
 				RelativePath="..\..\Install\hole2.bmp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\Install\holeBlue.bmp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Install\holeRed.bmp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

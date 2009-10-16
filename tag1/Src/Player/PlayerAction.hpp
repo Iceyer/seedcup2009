@@ -13,11 +13,11 @@ PLAYER_DLL_API typedef struct _Action
 
 PLAYER_DLL_API std::string GetPlayerName();
 
-PLAYER_DLL_API Action GetPlayerAction();
+PLAYER_DLL_API Action GetPlayerAction(int playerNum);
 
 typedef std::string (*pGetPlayerName)(void);
 
-typedef Action (*pGetPlayerActionFunc)(void);
+typedef Action (*pGetPlayerActionFunc)(int);
 
 const std::string strGetPlayerName = "GetPlayerName";
 

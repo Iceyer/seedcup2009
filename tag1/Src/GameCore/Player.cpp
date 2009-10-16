@@ -20,7 +20,8 @@ Player::Player(const std::string& DllPath)
     m_HINST =::LoadLibrary(DllPath.c_str());
     if (NULL == m_HINST)
     {
-        return;
+        if (MessageBox(NULL,"无法找到选手的DLl","加载DLL错误",MB_OK) == IDOK)
+            return;
     }
     //Fill the Player Information
     pGetPlayerName pFuncPlayerName = NULL;
@@ -33,8 +34,11 @@ Player::Player(const std::string& DllPath)
 
 Player::~Player()
 {
-    ::FreeLibrary(m_HINST);
-    m_HINST = NULL;
+    if (m_HINST)
+    {  
+        ::FreeLibrary(m_HINST);
+        m_HINST = NULL;
+    }
 }
 
 void Player::SetName(std::string name)
@@ -72,5 +76,5 @@ void Player::SetActionFunc(pGetPlayerActionFunc pFunc)
 
 Action Player::GetAction(void) const
 {
-    return m_pActionFunc();
+    return m_pActionFunc(m_ID);
 }

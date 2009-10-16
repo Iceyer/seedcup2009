@@ -39,6 +39,5 @@ namespace Hexxagon
         {
             pCurMatch->Run();
         }
-        delete pCurMatch;
     }
 }

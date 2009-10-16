@@ -9,7 +9,11 @@ Map::Map()
 
 Map::~Map()
 {
-    delete []m_pData;
+    if (m_pData)
+    {
+        delete[] m_pData;
+        m_pData = NULL;
+    }
 }
 
 int Map::MapWidth()
@@ -27,8 +31,51 @@ const MapItem& Map::GetMapStatus(const int x, const int y) const
     return m_pData[x * m_iMapWidth + y];
 }
 
-bool Map::UpdateMap(const Action& action)
+bool Map::UpdateMap(const Action& action, int FailorInorOut)
 {
+    //将目标位置的状态设置为与起始位置状态一样
+    m_pData[action.DesPosX*m_iMapWidth + action.DesPosY].m_Type = \
+        m_pData[action.PiecePosX*m_iMapWidth + action.PiecePosY].m_Type;
+
+    if (FailorInorOut == 2)
+    {
+        m_pData[action.PiecePosX*m_iMapWidth + action.PiecePosY].m_Type = MapItem::EMPTY;
+    }
+
+    MapItem::ItemType myType = m_pData[action.DesPosX*m_iMapWidth + action.DesPosY].m_Type;
+    MapItem::ItemType enemyType = myType == MapItem::PLayer1 ? MapItem::PLayer2 : MapItem::PLayer1;
+    if (   action.DesPosX+1 < m_iMapWidth
+        && m_pData[(action.DesPosX+1)*m_iMapWidth + action.DesPosY].m_Type == enemyType)
+    {//right
+        m_pData[(action.DesPosX+1)*m_iMapWidth + action.DesPosY].m_Type = myType;
+    }
+    if (   action.DesPosX+1 < m_iMapWidth
+        && action.DesPosY+1 <m_iMapHeight
+        && m_pData[(action.DesPosX+1)*m_iMapWidth + (action.DesPosY+1)].m_Type == enemyType)
+    {//right down
+        m_pData[(action.DesPosX+1)*m_iMapWidth + (action.DesPosY+1)].m_Type = myType;
+    }
+    if (   action.DesPosY+1 <m_iMapHeight
+        && m_pData[action.DesPosX*m_iMapWidth + (action.DesPosY+1)].m_Type == enemyType)
+    {//down
+        m_pData[action.DesPosX*m_iMapWidth + (action.DesPosY+1)].m_Type = myType;
+    }
+    if (   action.DesPosX-1 >= 0
+        && m_pData[(action.DesPosX-1)*m_iMapWidth + action.DesPosY].m_Type == enemyType)
+    {//left
+        m_pData[(action.DesPosX-1)*m_iMapWidth + action.DesPosY].m_Type = myType;
+    }
+    if (   action.DesPosY-1 >= 0
+        && m_pData[action.DesPosX*m_iMapWidth + (action.DesPosY-1)].m_Type == enemyType)
+    {//up
+        m_pData[action.DesPosX*m_iMapWidth + (action.DesPosY-1)].m_Type = myType;
+    }
+    if (   action.DesPosX-1 >= 0
+        && action.DesPosY-1 >= 0
+        && m_pData[(action.DesPosX-1)*m_iMapWidth + (action.DesPosY-1)].m_Type == enemyType)
+    {//left up
+        m_pData[(action.DesPosX-1)*m_iMapWidth + (action.DesPosY-1)].m_Type = myType;
+    }
     return true;
 }
 
@@ -43,11 +90,13 @@ bool Map::LoadMap(std::string strMapFileName)
 
     m_pData = new MapItem[m_iMapWidth * m_iMapHeight];
 
+    int ntemp;
     for (int i = 0; i < m_iMapWidth; ++i)
     {
         for (int j = 0; j < m_iMapHeight; ++j)
         {
-            MapFile>>m_pData[i * m_iMapWidth + j].m_Type;
+            MapFile>>ntemp;
+            m_pData[i * m_iMapWidth + j].m_Type = static_cast<MapItem::ItemType>(ntemp);
         }
     }
     MapFile.close();
@@ -68,6 +117,7 @@ MapMgr::~MapMgr()
         delete *itor;
     }
 }
+
 Map* MapMgr::CurMap()
 {
     return m_pCurMap;
