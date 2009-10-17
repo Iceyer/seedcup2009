@@ -170,6 +170,7 @@ void Render::DrawGameInfo()
     m_pDC->LineTo(Xborder + 3, 0 + 2);
 
     m_pDC->SetTextColor(RGB(200, 200, 200));
+    //玩家一
     m_pDC->TextOut(Xoffset, YPos, _T("Player1"));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
@@ -180,8 +181,19 @@ void Render::DrawGameInfo()
     strInfo.Format(_T("%d"), Game::HexxagonGame().CurMatch()->GetJudge().GetScore(MapItem::PLayer1));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, strInfo);
+    //
+    YPos += 60;
+    //玩家二
+    m_pDC->TextOut(Xoffset, YPos, _T("Player2"));
     YPos += 30;
-    m_pDC->TextOut(Xoffset,YPos, Game::HexxagonGame().CurMatch()->GetPlayer(MapItem::PLayer2).GetName().c_str());
+    m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
+    YPos += 30;
+    m_pDC->TextOut(Xoffset, YPos, Game::HexxagonGame().CurMatch()->GetPlayer(MapItem::PLayer2).GetName().c_str());
+    YPos += 30;
+    m_pDC->TextOut(Xoffset, YPos, _T("Score:"));
+    strInfo.Format(_T("%d"), Game::HexxagonGame().CurMatch()->GetJudge().GetScore(MapItem::PLayer2));
+    YPos += 30;
+    m_pDC->TextOut(Xoffset, YPos, strInfo);
 
     m_pDC->SelectObject(pOldFont);
     m_pDC->SelectObject(pOldPen);

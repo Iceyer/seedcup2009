@@ -30,30 +30,22 @@ bool Match::Run()
 
     Action  action;
     int FailorInorOut; //0表示检查结果为失败，1表示移动到内环，2表示移动到外环
+    Player *pPlayerTemp = m_pPlayer1;
     while (m_pJudge->IsGameEnd())
     {
-        action = (*m_pPlayer1).GetAction();
-        FailorInorOut = m_pJudge->CheckAction(action, (*m_pPlayer1).GetPlayerID());
+        action = pPlayerTemp->GetAction();
+        FailorInorOut = m_pJudge->CheckAction(action, pPlayerTemp->GetPlayerID());
         if (FailorInorOut)
         {
             m_pMap->UpdateMap(action,FailorInorOut);
             UpdateUI();
         }
-        Sleep(200);
-        if (!m_pJudge->IsGameEnd())
-        {
-            break;
-        }
-        action = (*m_pPlayer2).GetAction();
-        FailorInorOut = m_pJudge->CheckAction(action, (*m_pPlayer2).GetPlayerID());
-        if (FailorInorOut)
-        {
-            m_pMap->UpdateMap(action,FailorInorOut);
-            UpdateUI();
-        }
+        //轮流调用两个选手的操作函数
+        pPlayerTemp = (pPlayerTemp == m_pPlayer1) ? m_pPlayer2 : m_pPlayer1;
         Sleep(200);
     }
 
+    UpdateUI();
     return false;
 }
 

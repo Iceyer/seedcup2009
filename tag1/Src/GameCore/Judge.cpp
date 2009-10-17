@@ -71,7 +71,7 @@ int Judge::CheckAction(const Action& action, int PlayerType)
 
 int Judge::GetScore(int PlayerID) const
 {
-    return 0;
+    return PlayerID == int(MapItem::PLayer1) ? m_stonesOfPlayer1 : m_stonesOfPlayer2;
 }
 
 bool Judge::IsGameEnd()
