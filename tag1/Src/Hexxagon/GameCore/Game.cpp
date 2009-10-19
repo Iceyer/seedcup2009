@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include <process.h>
-#include <windows.h>
 
 #include "Game.hpp"
 #include "..\..\Player\PlayerAction.hpp"
@@ -28,14 +27,20 @@ Game::~Game()
         delete m_pJudge; 
         m_pJudge = NULL;
     }
-    while(m_PlayerQueue.back())
+    /*The Code below would case memory problem*/
+//     while(m_PlayerQueue.back())
+//     {
+//         delete m_PlayerQueue.back();
+//         m_PlayerQueue.pop_back();
+//     }
+    PlayerQueue::iterator itor = m_PlayerQueue.begin();
+    for (; itor != m_PlayerQueue.end(); ++itor)
     {
-        delete m_PlayerQueue.back();
-        m_PlayerQueue.pop_back();
+        delete *itor;
     }
 }
 
-Match* Game::CurMatch()
+Match* Game::CurMatch() const
 {
     return m_pCurMatch;
 }
@@ -53,15 +58,14 @@ void Game::Prepare()
 void Game::Start()
 {
     /*GameLoop*/
-    m_pJudge = new Judge(m_MapMgr.CurMap());
-    std::vector<Player*>::iterator      itorCurPlayer;
+    m_pJudge = new Judge(*m_MapMgr.Begin());
+    PlayerQueue::iterator      itorCurPlayer;
     itorCurPlayer = m_PlayerQueue.begin();
     Player* pPlayer1 = (*itorCurPlayer++);
     Player* pPlayer2 = (*itorCurPlayer);
 
-    m_pCurMatch = new Match(m_MapMgr.CurMap(), pPlayer1, pPlayer2, m_pJudge);
-    _beginthread(Hexxagon::RunMatch, 0 , m_pCurMatch);
-
+    m_pCurMatch = new Match(*m_MapMgr.Begin(), pPlayer1, pPlayer2, m_pJudge);
+    m_MatchHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::RunMatch, 0 , m_pCurMatch));
 }
 
 void Game::Pause()
@@ -70,13 +74,15 @@ void Game::Pause()
 
 void Game::End()
 {
+    m_pCurMatch->Stop();
+    WaitForSingleObject(m_MatchHandle, INFINITE);
 }
 
 bool Game::LoadGame(std::string strSaveFileName)
 {
     using   std::string;
-    //Get GameSave File
     using   std::ifstream;
+    //Get GameSave File
     ifstream    SaveFile;
     SaveFile.open(strSaveFileName.c_str(), std::ios::in);
 
@@ -99,7 +105,7 @@ bool Game::LoadGame(std::string strSaveFileName)
 
         if (!key.compare("Map"))
         {
-          m_MapMgr.SetCurMap(m_MapMgr.AddMap(val));
+          m_MapMgr.AddMap(val);
         }
     }
 

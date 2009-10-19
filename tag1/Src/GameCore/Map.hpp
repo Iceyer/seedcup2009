@@ -2,6 +2,7 @@
 
 #include "..\Player\PlayerAction.hpp"
 #include <vector>
+//#include <list>
 
 namespace Hexxagon
 {
@@ -38,9 +39,9 @@ namespace Hexxagon
 
         const MapItem& GetMapStatus(const int x, const int y) const;
 
-        int MapWidth();
+        int MapWidth() const;
 
-        int MapHeigth();
+        int MapHeigth() const;
 
     private:
         MapItem *m_pData;
@@ -51,18 +52,20 @@ namespace Hexxagon
     class MapMgr
     {
     public:
+        typedef std::vector<Map*>           MapList;
+        typedef MapList::iterator           MapItor;
+        typedef MapList::const_iterator     MapConstItor;
+
         MapMgr();
 
         ~MapMgr();
 
-        Map* CurMap();
+        MapItor Begin();
 
-        void SetCurMap(Map* map);
+        MapItor End();
 
         Map* AddMap(std::string strMapFileName);
     private:
-        typedef std::vector<Map*>       MapList;
-        Map*          m_pCurMap;
         MapList       m_MapList;
     };
 

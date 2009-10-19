@@ -56,8 +56,8 @@ void Render::RenderSence()
 
     /*Draw Map*/
     /*Calc The Start Point*/
-    const int     iMapWidth = Game::HexxagonGame().m_MapMgr.CurMap()->MapWidth();
-    const int     iMapHeight = Game::HexxagonGame().m_MapMgr.CurMap()->MapHeigth();
+    const int     iMapWidth = Game::HexxagonGame().CurMatch()->GetMap().MapWidth();
+    const int     iMapHeight = Game::HexxagonGame().CurMatch()->GetMap().MapHeigth();
     const int     iStartX = 468 -18*iMapWidth; //原表达式为 200 + (16-iMapWidth)/2*36;
     const int     iStartY = 285 + (15-30*iMapHeight+15*iMapWidth)/2; //原表达式为 (600 - iMapHeight*30 - (iMapWidth-1)*15)/2 + (iMapWidth-1)*15;
 
@@ -67,7 +67,7 @@ void Render::RenderSence()
     {
         for (int j = 0; j < iMapHeight; ++j)
         {
-            MapItem curItem = Game::HexxagonGame().m_MapMgr.CurMap()->GetMapStatus(i, j);
+            MapItem curItem = Game::HexxagonGame().CurMatch()->GetMap().GetMapStatus(i, j);
             iItemX  = iStartX + i*36;
             iItemY  = iStartY - i*15 + j*30;
             switch (curItem.m_Type)

@@ -4,10 +4,16 @@
 using namespace Hexxagon;
 
 Match::Match()
+: m_bStopMath(false)
+, m_pMap(NULL)
+, m_pPlayer1(NULL)
+, m_pPlayer2(NULL)
+, m_pJudge(NULL)
 {
 }
 
 Match::Match(Map* map, Player* player1, Player* player2, Judge* judge)
+: m_bStopMath(false)
 {
     m_pMap = map;
     m_pPlayer1 = player1;
@@ -31,7 +37,7 @@ bool Match::Run()
     Action  action;
     int FailorInorOut; //0表示检查结果为失败，1表示移动到内环，2表示移动到外环
     Player *pPlayerTemp = m_pPlayer1;
-    while (m_pJudge->IsGameEnd())
+    while (m_pJudge->IsGameEnd() && !m_bStopMath)
     {
         action = pPlayerTemp->GetAction();
         FailorInorOut = m_pJudge->CheckAction(action, pPlayerTemp->GetPlayerID());
@@ -42,11 +48,16 @@ bool Match::Run()
         }
         //轮流调用两个选手的操作函数
         pPlayerTemp = (pPlayerTemp == m_pPlayer1) ? m_pPlayer2 : m_pPlayer1;
-        Sleep(200);
+        Sleep(500);
     }
 
     UpdateUI();
     return false;
+}
+
+void Match::Stop()
+{
+    m_bStopMath = true;
 }
 
 const Player& Match::GetPlayer(int PlayerID)
@@ -73,5 +84,8 @@ const Map& Match::GetMap()
 
 void Match::UpdateUI()
 {
-    AfxGetApp()->m_pMainWnd->Invalidate();
+    if (AfxGetApp()->m_pMainWnd)
+    {
+        AfxGetApp()->m_pMainWnd->Invalidate();
+    }
 }

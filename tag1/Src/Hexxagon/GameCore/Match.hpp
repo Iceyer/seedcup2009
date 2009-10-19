@@ -17,6 +17,8 @@ namespace Hexxagon
 
         bool Run();
 
+        void Stop();
+
         void UpdateUI();
 
         const Player& GetPlayer(int PlayerID);
@@ -30,6 +32,8 @@ namespace Hexxagon
         Player*     m_pPlayer1;
         Player*     m_pPlayer2;
         Judge*      m_pJudge;
+
+        bool        m_bStopMath;
     };
 
     static void RunMatch(void* pMatch)

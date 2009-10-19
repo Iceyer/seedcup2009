@@ -1,7 +1,7 @@
 #include "PlayerAction.hpp"
 #include "MapStatus.hpp"
 
-const   std::string strTeamName = "TestPlayer";
+const   std::string strTeamName = "¼òµ¥µçÄÔ";
 
 PLAYER_DLL_API std::string GetPlayerName()
 {

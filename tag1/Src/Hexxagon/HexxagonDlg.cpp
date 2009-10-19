@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(CHexxagonDlg, CDialog)
     ON_WM_QUERYDRAGICON()
     //}}AFX_MSG_MAP
     ON_WM_ERASEBKGND()
+    ON_WM_DESTROY()
 END_MESSAGE_MAP()
 
 
@@ -209,4 +210,11 @@ BOOL CHexxagonDlg::OnEraseBkgnd(CDC* pDC)
 CHexxagonDlg* CHexxagonDlg::Myself()
 {
     return m_pSelf;
+}
+void CHexxagonDlg::OnDestroy()
+{
+    CDialog::OnDestroy();
+    EnterCriticalSection(&m_Critical);
+    Hexxagon::Game::HexxagonGame().End();
+    LeaveCriticalSection(&m_Critical);
 }

@@ -1,5 +1,5 @@
 #pragma once
-
+#include <windows.h>
 #include "..\..\GameCore\Map.hpp"
 #include "..\..\GameCore\Player.hpp"
 #include "..\..\GameCore\Judge.hpp"
@@ -16,7 +16,7 @@ namespace Hexxagon
             return m_Game;
         }
 
-        Match* CurMatch();
+        Match* CurMatch() const;
 
         void Prepare();
 
@@ -30,14 +30,17 @@ namespace Hexxagon
 
         bool LoadPlayer(std::string DllPath);
 
-        MapMgr      m_MapMgr;
     public:
         ~Game();
     private:
+        typedef std::vector<Player*> PlayerQueue;
+
         Game();
         static Game             m_Game;
         Hexxagon::Match*        m_pCurMatch;
         Hexxagon::Judge*        m_pJudge;
-        std::vector<Player*>    m_PlayerQueue;
+        PlayerQueue             m_PlayerQueue;
+        MapMgr                  m_MapMgr;
+        HANDLE                  m_MatchHandle;
     };
 }

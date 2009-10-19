@@ -16,12 +16,12 @@ Map::~Map()
     }
 }
 
-int Map::MapWidth()
+int Map::MapWidth() const
 {
     return m_iMapWidth;
 }
 
-int Map::MapHeigth()
+int Map::MapHeigth() const
 {
     return m_iMapHeight;
 }
@@ -118,14 +118,14 @@ MapMgr::~MapMgr()
     }
 }
 
-Map* MapMgr::CurMap()
+MapMgr::MapItor MapMgr::Begin()
 {
-    return m_pCurMap;
+    return m_MapList.begin();
 }
 
-void MapMgr::SetCurMap(Map* map)
+MapMgr::MapItor MapMgr::End()
 {
-    m_pCurMap = map;
+    return  m_MapList.end();
 }
 
 Map* MapMgr::AddMap(std::string strMapFileName)
