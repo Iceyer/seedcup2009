@@ -84,7 +84,10 @@ bool Map::LoadMap(std::string strMapFileName)
     using std::ifstream;
     ifstream    MapFile;
     MapFile.open(strMapFileName.c_str(), std::ios::in);
-
+    if (!MapFile.is_open())
+    {
+        return false;
+    }
     MapFile>>m_iMapWidth;
     MapFile>>m_iMapHeight;
 
@@ -131,7 +134,10 @@ MapMgr::MapItor MapMgr::End()
 Map* MapMgr::AddMap(std::string strMapFileName)
 {
     Map* pNewMap = new Map;
-    pNewMap->LoadMap(strMapFileName);
+    if(!pNewMap->LoadMap(strMapFileName))
+    {
+        return NULL;
+    }
     m_MapList.push_back(pNewMap);
     return pNewMap;
 }

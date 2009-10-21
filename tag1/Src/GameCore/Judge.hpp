@@ -14,7 +14,9 @@ namespace Hexxagon
 
         void Prepare(Map* pMap);
 
-        int CheckAction(const Action& action, int PlayerType);
+        int CheckAction(const Action& action, int PlayerID);
+
+        bool IsPlayerCanAction(int PlayerID);
 
         int GetScore(int PlayerID) const;
 

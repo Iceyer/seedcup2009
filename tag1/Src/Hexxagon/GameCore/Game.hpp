@@ -18,13 +18,15 @@ namespace Hexxagon
 
         Match* CurMatch() const;
 
-        void Prepare();
+        bool Prepare();
 
         void Start();
 
         void Pause();
 
         void End();
+
+        static void MatchLoop(void* pGame);
 
         bool LoadGame(std::string strSaveFileName);
 

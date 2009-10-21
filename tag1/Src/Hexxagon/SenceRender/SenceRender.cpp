@@ -51,6 +51,12 @@ void Render::SetSenceSize(int width, int height)
 void Render::RenderSence()
 {
     using namespace Hexxagon;
+
+    //CurMatch为空，则游戏未正常初始化
+    if(!Game::HexxagonGame().CurMatch())
+    {
+        return;
+    }
     /*Draw Game Information*/
     DrawGameInfo();
 
@@ -146,7 +152,7 @@ void Render::DrawGameInfo()
 {
     using namespace Hexxagon;
     int         Xoffset = 20;
-    int         Yoffset = 20;
+    int         Yoffset = 60;
     int         Xborder = 200;
     int         YDiv = 30;
     int         YPos = Yoffset;
@@ -171,7 +177,8 @@ void Render::DrawGameInfo()
 
     m_pDC->SetTextColor(RGB(200, 200, 200));
     //玩家一
-    m_pDC->TextOut(Xoffset, YPos, _T("Player1"));
+    DrawHexagon(Xoffset, YPos, MapItem::PLayer2);
+    m_pDC->TextOut(Xoffset + 60, YPos, _T("Player1"));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
     YPos += 30;
@@ -183,8 +190,10 @@ void Render::DrawGameInfo()
     m_pDC->TextOut(Xoffset, YPos, strInfo);
     //
     YPos += 60;
+
     //玩家二
-    m_pDC->TextOut(Xoffset, YPos, _T("Player2"));
+    DrawHexagon(Xoffset, YPos, MapItem::PLayer1);
+    m_pDC->TextOut(Xoffset + 60, YPos, _T("Player2"));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
     YPos += 30;
@@ -194,6 +203,11 @@ void Render::DrawGameInfo()
     strInfo.Format(_T("%d"), Game::HexxagonGame().CurMatch()->GetJudge().GetScore(MapItem::PLayer2));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, strInfo);
+
+    YPos += 60;
+    m_pDC->TextOut(Xoffset, YPos, _T("For More Help"));
+    YPos += 30;
+    m_pDC->TextOut(Xoffset, YPos, _T("Press F2"));
 
     m_pDC->SelectObject(pOldFont);
     m_pDC->SelectObject(pOldPen);

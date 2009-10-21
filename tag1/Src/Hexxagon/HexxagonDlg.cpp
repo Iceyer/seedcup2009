@@ -72,6 +72,7 @@ BEGIN_MESSAGE_MAP(CHexxagonDlg, CDialog)
     //}}AFX_MSG_MAP
     ON_WM_ERASEBKGND()
     ON_WM_DESTROY()
+    ON_WM_KEYUP()
 END_MESSAGE_MAP()
 
 
@@ -108,10 +109,12 @@ BOOL CHexxagonDlg::OnInitDialog()
     SetWindowPos(NULL, 0, 0, 800, 600, SWP_SHOWWINDOW);
     ::InitializeCriticalSection(&m_Critical);
 
-    Hexxagon::Game::HexxagonGame().Prepare();
-    Hexxagon::Game::HexxagonGame().Start();
-
-    return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
+    if (Hexxagon::Game::HexxagonGame().Prepare())
+    {
+        Hexxagon::Game::HexxagonGame().Start();
+        return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
+    }
+    return  FALSE;
 }
 
 void CHexxagonDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -217,4 +220,14 @@ void CHexxagonDlg::OnDestroy()
     EnterCriticalSection(&m_Critical);
     Hexxagon::Game::HexxagonGame().End();
     LeaveCriticalSection(&m_Critical);
+}
+
+void CHexxagonDlg::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+    // TODO: 在此添加消息处理程序代码和/或调用默认值
+    if (VK_F2 == nChar)
+    {
+        MessageBox(_T("Don't Ask Me! I DON'T Know Anything ..."));
+    }
+    CDialog::OnKeyUp(nChar, nRepCnt, nFlags);
 }
