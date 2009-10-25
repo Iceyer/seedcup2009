@@ -25,6 +25,10 @@ namespace Hexxagon
 
         const Player& GetPlayer(int PlayerID);
 
+        const Player& GetCurPlayer();
+
+        const Action& GetCurAction();
+
         const Judge& GetJudge();
 
         const Map&  GetMap();
@@ -33,9 +37,10 @@ namespace Hexxagon
         Map*        m_pMap;
         Player*     m_pPlayer1;
         Player*     m_pPlayer2;
+        Player*     m_pCurActionPlayer;
         Judge*      m_pJudge;
-
         bool        m_bStopMath;
+        Action      m_CurAction;
     };
 
     static void RunMatch(void* pMatch)

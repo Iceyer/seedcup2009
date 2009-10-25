@@ -2,19 +2,23 @@
 #include "../../Hexxagon/resource.h"
 
 #include "SenceRender.hpp"
+#include <cmath>
 #include <assert.h>
 #include <afxmt.h>
 
 const double gdCos30 = 0.86602540378443864676372317075294;
 const double HexgaonSize = 20;
 const double HexgaonSizeB = HexgaonSize * gdCos30;
-
+int          giN = 0;
+int          giM = 0;
 Render Render::m_Render;
+using namespace Hexxagon;
 
 Render::Render()
+: m_bMoveAction(false)
+, m_bMoving(false)
 {
     LOGFONT                 font;
-
     font.lfHeight           = - 20;
     font.lfWidth            = 0;
     font.lfEscapement       = 0;
@@ -69,7 +73,6 @@ CPoint Render::GetPosInPixel(int x, int y)
 
 void Render::RenderSence()
 {
-    using namespace Hexxagon;
     //CurMatch为空，则游戏未正常初始化
     if(!Game::HexxagonGame().CurMatch())
     {
@@ -91,20 +94,72 @@ void Render::RenderSence()
             case MapItem::INVALID:
                 break;
             case MapItem::EMPTY:
-                DrawHexagon(posItem.x, posItem.y, IDB_BITMAP1, IDB_BITMAP2, curItem.m_Type);
+                DrawHexagon(posItem.x, posItem.y, IDB_EMPTY_HOLE, IDB_HOLE_BK, curItem.m_Type);
                 break;
             case MapItem::PLayer1://玩家1使用蓝色石子
-                DrawHexagon(posItem.x, posItem.y, IDB_BITMAP3, IDB_BITMAP2, curItem.m_Type);
+                DrawHexagon(posItem.x, posItem.y, IDB_BLUE_HOLE, IDB_HOLE_BK, curItem.m_Type);
                 break;
             case MapItem::PLayer2://玩家2使用红色石子
-                DrawHexagon(posItem.x, posItem.y, IDB_BITMAP4, IDB_BITMAP2, curItem.m_Type);
+                DrawHexagon(posItem.x, posItem.y, IDB_RED_HOLE, IDB_HOLE_BK, curItem.m_Type);
                 break;
             default:
                 break;
             }
         }
     }
+    if (m_bMoveAction)
+    {
+        RenderMoveAction(Game::HexxagonGame().CurMatch()->GetCurAction());
+    }
+}
 
+void Render::EnableMoveAction()
+{
+    m_bMoveAction = true;
+    m_bMoving = false;
+}
+
+bool Render::IsMoveActionEnd()
+{
+    return m_bMoveAction;
+}
+
+void Render::RenderMoveAction(const Action& curAction)
+{
+    m_PosStart = Render::SRender().GetPosInPixel(curAction.PiecePosX,curAction.PiecePosY);
+    m_PosEnd = Render::SRender().GetPosInPixel(curAction.DesPosX,curAction.DesPosY);
+    float crossLength = (float)sqrt(double((m_PosEnd.x-m_PosStart.x)*(m_PosEnd.x-m_PosStart.x) 
+        + (m_PosEnd.y-m_PosStart.y)*(m_PosEnd.y-m_PosStart.y)));
+    float delta = 1;
+    if (!m_bMoving)
+    {
+        m_CurPos = m_PosStart;
+        m_bMoving = true;
+        giM = crossLength / delta;
+        giN = 0;
+    }
+    else
+    {
+        float deltaX = ((m_PosEnd.x - m_PosStart.x)/double(giM));
+        float deltaY = ((m_PosEnd.y - m_PosStart.y)/DOUBLE(giM));
+
+        m_CurPos.x = m_PosStart.x + giN * deltaX;
+        m_CurPos.y = m_PosStart.y + giN * deltaY;
+        giN ++;
+        if (MapItem::PLayer1 == Game::HexxagonGame().CurMatch()->GetCurPlayer().GetPlayerID())
+        {
+            DrawPlayer1(m_CurPos.x,m_CurPos.y);
+        }
+        else
+        {
+            DrawPlayer2(m_CurPos.x,m_CurPos.y);
+        }
+
+        if(giN == giM)
+        {
+            m_bMoveAction = false;
+        }
+    }
 }
 
 //该函数只对传进来的两个位图进行运算然后贴图，最后一个参数目前没有作用
@@ -118,14 +173,12 @@ void Render::DrawHexagon(int cx, int cy, unsigned bitmapID1, unsigned bitmapID2,
 
     if (!(hole1.LoadBitmap(bitmapID1)&&hole2.LoadBitmap(bitmapID2)))
     {
-        if (MessageBox(NULL,"无法找到需要加载的位图","加载位图失败",MB_OK) == IDOK)
+        if (MessageBox(NULL, _T("无法找到需要加载的位图"), _T("加载位图失败"), MB_OK) == IDOK)
         {
             return;
         }
     }
 
-    CMutex g_Mutex;
-    g_Mutex.Lock();
     CDC cdctemp;
     cdctemp.CreateCompatibleDC(NULL);
     cdctemp.SelectObject(&hole2);
@@ -134,21 +187,16 @@ void Render::DrawHexagon(int cx, int cy, unsigned bitmapID1, unsigned bitmapID2,
     cdctemp.SelectObject(&hole1);
     m_pDC->BitBlt(cx, cy, 50, 30, &cdctemp, 0, 0, SRCAND);//与源位图与目标位图做“与”运算
     cdctemp.DeleteDC();
-    g_Mutex.Unlock();
 }
 
-void Render::DrawPlayer1(int cx, int cy, int edgelength)
+void Render::DrawPlayer1(int cx, int cy)
 {
-    /*CBrush  Brush(gColorBlue);
-    CBrush* pOldBrush = m_pDC->SelectObject(&Brush);
-    m_pDC->Ellipse(cx - edgelength, cy - edgelength, cx + edgelength, cy + edgelength); */
+    DrawHexagon(cx, cy, IDB_BLUE_STONE, IDB_STONE_BK, Hexxagon::MapItem::PLayer1);
 }
 
-void Render::DrawPlayer2(int cx, int cy, int edgelength)
+void Render::DrawPlayer2(int cx, int cy)
 {
-    /*CBrush  Brush(gColorWhite);
-    CBrush* pOldBrush = m_pDC->SelectObject(&Brush);
-    m_pDC->Ellipse(cx - edgelength, cy - edgelength, cx + edgelength, cy + edgelength); */
+    DrawHexagon(cx, cy, IDB_RED_STONE, IDB_STONE_BK, Hexxagon::MapItem::PLayer2);
 }
 
 void Render::DrawGameInfo()
@@ -182,7 +230,7 @@ void Render::DrawGameInfo()
 
     m_pDC->SetTextColor(RGB(200, 200, 200));
     //玩家一信息
-    DrawHexagon(Xoffset, YPos, IDB_BITMAP5, IDB_BITMAP7, MapItem::PLayer1);
+    DrawPlayer1(Xoffset, YPos);
     m_pDC->TextOut(Xoffset + 60, YPos, _T("Player1"));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
@@ -193,11 +241,9 @@ void Render::DrawGameInfo()
     strInfo.Format(_T("%d"), Game::HexxagonGame().CurMatch()->GetJudge().GetScore(MapItem::PLayer1));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, strInfo);
-    //
     YPos += 60;
-
     //玩家二信息
-    DrawHexagon(Xoffset, YPos, IDB_BITMAP6, IDB_BITMAP7, MapItem::PLayer2);
+    DrawPlayer2(Xoffset, YPos);
     m_pDC->TextOut(Xoffset + 60, YPos, _T("Player2"));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
@@ -208,13 +254,11 @@ void Render::DrawGameInfo()
     strInfo.Format(_T("%d"), Game::HexxagonGame().CurMatch()->GetJudge().GetScore(MapItem::PLayer2));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, strInfo);
-
     //书写帮助信息
     YPos += 60;
     m_pDC->TextOut(Xoffset, YPos, _T("For More Help"));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Press F2"));
-
     m_pDC->SelectObject(pOldFont);
     m_pDC->SelectObject(pOldPen);
 }

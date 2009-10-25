@@ -168,13 +168,13 @@ END
 // Bitmap
 //
 
-IDB_BITMAP1             BITMAP                  "..\\..\\Install\\hole1.bmp"
-IDB_BITMAP2             BITMAP                  "..\\..\\Install\\hole2.bmp"
-IDB_BITMAP3             BITMAP                  "..\\..\\Install\\holeBlue.bmp"
-IDB_BITMAP4             BITMAP                  "..\\..\\Install\\holeRed.bmp"
-IDB_BITMAP5             BITMAP                  "..\\..\\Install\\blueStone.bmp"
-IDB_BITMAP6             BITMAP                  "..\\..\\Install\\redStone.bmp"
-IDB_BITMAP7             BITMAP                  "..\\..\\Install\\stoneMask.bmp"
+IDB_EMPTY_HOLE          BITMAP                  ".\\Bitmap\\EmptyHole.bmp"
+IDB_BLUE_HOLE           BITMAP                  ".\\Bitmap\\BlueHole.bmp"
+IDB_RED_HOLE            BITMAP                  ".\\Bitmap\\RedHole.bmp"
+IDB_HOLE_BK             BITMAP                  ".\\Bitmap\\HoleBackground.bmp"
+IDB_BLUE_STONE          BITMAP                  ".\\Bitmap\\BlueStone.bmp"
+IDB_RED_STONE           BITMAP                  ".\\Bitmap\\RedStone.bmp"
+IDB_STONE_BK            BITMAP                  ".\\Bitmap\\StoneBackground.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

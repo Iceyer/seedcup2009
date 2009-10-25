@@ -17,6 +17,7 @@ Match::Match()
 
 Match::Match(Map* map, Player* player1, Player* player2, Judge* judge)
 : m_bStopMath(false)
+, m_pCurActionPlayer(NULL)
 {
     m_pMap = map;
     m_pPlayer1 = player1;
@@ -34,44 +35,33 @@ bool Match::Run()
     m_pPlayer1->SetPlayerID(MapItem::PLayer1);
     m_pPlayer2->Prepare(m_pMap);
     m_pPlayer2->SetPlayerID(MapItem::PLayer2);
-
     m_pJudge->Prepare(m_pMap);
 
-    Action  action;
-    int FailorInorOut; //0表示检查结果为失败，1表示移动到内环，2表示移动到外环
-    Player *pCurActionPlayer = m_pPlayer1;
-    float delta = 5.0;
+    m_pCurActionPlayer = m_pPlayer1;
+    int iCheckRet;
     while (m_pJudge->IsGameEnd() && !m_bStopMath)
     {
-        if (!m_pJudge->IsPlayerCanAction(pCurActionPlayer->GetPlayerID()))
+        if (!m_pJudge->IsPlayerCanAction(m_pCurActionPlayer->GetPlayerID()))
         {
             continue;
         }
-        action = pCurActionPlayer->GetAction();
-        FailorInorOut = m_pJudge->CheckAction(action, pCurActionPlayer->GetPlayerID());
-        if (FailorInorOut)
+        m_CurAction = m_pCurActionPlayer->GetAction();
+        iCheckRet = m_pJudge->CheckAction(m_CurAction, m_pCurActionPlayer->GetPlayerID());
+        if (iCheckRet)
         {
-            CPoint posStart = Render::SRender().GetPosInPixel(action.PiecePosX,action.PiecePosY);
-            CPoint posEnd = Render::SRender().GetPosInPixel(action.DesPosX,action.DesPosY);
-            float crossLength = (float)sqrt(double((posEnd.x-posStart.x)*(posEnd.x-posStart.x) + (posEnd.y-posStart.y)*(posEnd.y-posStart.y)));
 
-            int deltaX = int((posEnd.x - posStart.x)*delta/crossLength);
-            int deltaY = int((posEnd.y - posStart.y)*delta/crossLength);
-
-
-            while(abs(posStart.x-posEnd.x)>abs(2*deltaX) && abs(posStart.y-posEnd.y)>abs(2*deltaY))
+            Render::SRender().EnableMoveAction();
+            while (Render::SRender().IsMoveActionEnd())
             {
-                Render::SRender().DrawHexagon(posStart.x,posStart.y,IDB_BITMAP3,IDB_BITMAP2);
-                Sleep(3000);
-                posStart.x += deltaX;
-                posStart.y += deltaY;
+                Sleep(40);
+                UpdateUI();
             }
-
-            m_pMap->UpdateMap(action,FailorInorOut);
+            m_pMap->UpdateMap(m_CurAction,iCheckRet);
+            Sleep(40);
             UpdateUI();
         }
         //轮流调用两个选手的操作函数
-        pCurActionPlayer = (pCurActionPlayer == m_pPlayer1) ? m_pPlayer2 : m_pPlayer1;
+        m_pCurActionPlayer = (m_pCurActionPlayer == m_pPlayer1) ? m_pPlayer2 : m_pPlayer1;
         Sleep(1000);
     }
 
@@ -90,10 +80,20 @@ const Player& Match::GetPlayer(int PlayerID)
     {
         return *m_pPlayer1;
     }
-    else
+    else if (MapItem::PLayer2 == PlayerID)
     {
         return *m_pPlayer2;
     }
+}
+
+const Player& Match::GetCurPlayer()
+{
+    return *m_pCurActionPlayer;
+}
+
+const Action& Match::GetCurAction()
+{
+    return m_CurAction;
 }
 
 const Judge& Match::GetJudge()

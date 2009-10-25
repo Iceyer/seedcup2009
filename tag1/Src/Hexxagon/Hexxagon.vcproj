@@ -295,7 +295,15 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\..\Install\blueStone.bmp"
+				RelativePath=".\Bitmap\BlueHole.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Bitmap\BlueStone.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\Bitmap\EmptyHole.bmp"
 				>
 			</File>
 			<File
@@ -311,27 +319,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Install\hole1.bmp"
+				RelativePath=".\Bitmap\HoleBackground.bmp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Install\hole2.bmp"
+				RelativePath=".\Bitmap\RedHole.bmp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Install\holeBlue.bmp"
+				RelativePath=".\Bitmap\RedStone.bmp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Install\holeRed.bmp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Install\redStone.bmp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Install\stoneMask.bmp"
+				RelativePath=".\Bitmap\StoneBackground.bmp"
 				>
 			</File>
 		</Filter>

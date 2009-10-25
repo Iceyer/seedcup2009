@@ -7,13 +7,13 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_HEXXAGON_DIALOG             102
 #define IDR_MAINFRAME                   128
-#define IDB_BITMAP1                     129
-#define IDB_BITMAP2                     130
-#define IDB_BITMAP3                     131
-#define IDB_BITMAP4                     132
-#define IDB_BITMAP5                     134
-#define IDB_BITMAP6                     135
-#define IDB_BITMAP7                     136
+#define IDB_EMPTY_HOLE                  129
+#define IDB_HOLE_BK                     130
+#define IDB_BLUE_HOLE                   131
+#define IDB_RED_HOLE                    132
+#define IDB_BLUE_STONE                  134
+#define IDB_RED_STONE                   135
+#define IDB_STONE_BK                    136
 #define IDC_CUSTOM1                     1000
 #define IDC_VIEWS                       1000
 
