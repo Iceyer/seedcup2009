@@ -56,19 +56,29 @@ bool Game::Prepare()
 
 void Game::Start()
 {
-    /*GameLoop*/
-    m_MatchHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::Game::MatchLoop, 0 , NULL));
-}
-
-void Game::MatchLoop(void* /*pGame*/)
-{
-    Judge judge(*m_Game.m_MapMgr.Begin());
+    m_Game.m_pJudge = new Judge(*m_Game.m_MapMgr.Begin());
     PlayerQueue::iterator      itorCurPlayer;
     itorCurPlayer = m_Game.m_PlayerQueue.begin();
     Player* pPlayer1 = (*itorCurPlayer++);
     Player* pPlayer2 = (*itorCurPlayer);
 
-    m_Game.m_pCurMatch = new Match(*m_Game.m_MapMgr.Begin(), pPlayer1, pPlayer2, &judge);
+    m_Game.m_pCurMatch = new Match(*m_Game.m_MapMgr.Begin(), pPlayer1, pPlayer2, m_Game.m_pJudge);
+    //m_Game.m_pCurMatch->Run();
+    //
+    m_MatchHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::RunMatch, 0 , m_pCurMatch));
+    /*GameLoop*/
+    //m_MatchHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::Game::MatchLoop, 0 , NULL));
+}
+
+void Game::MatchLoop(void* /*pGame*/)
+{
+    m_Game.m_pJudge = new Judge(*m_Game.m_MapMgr.Begin());
+    PlayerQueue::iterator      itorCurPlayer;
+    itorCurPlayer = m_Game.m_PlayerQueue.begin();
+    Player* pPlayer1 = (*itorCurPlayer++);
+    Player* pPlayer2 = (*itorCurPlayer);
+
+    m_Game.m_pCurMatch = new Match(*m_Game.m_MapMgr.Begin(), pPlayer1, pPlayer2, m_Game.m_pJudge);
     m_Game.m_pCurMatch->Run();
     //
     //m_MatchHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::RunMatch, 0 , m_pCurMatch));

@@ -172,6 +172,9 @@ IDB_BITMAP1             BITMAP                  "..\\..\\Install\\hole1.bmp"
 IDB_BITMAP2             BITMAP                  "..\\..\\Install\\hole2.bmp"
 IDB_BITMAP3             BITMAP                  "..\\..\\Install\\holeBlue.bmp"
 IDB_BITMAP4             BITMAP                  "..\\..\\Install\\holeRed.bmp"
+IDB_BITMAP5             BITMAP                  "..\\..\\Install\\blueStone.bmp"
+IDB_BITMAP6             BITMAP                  "..\\..\\Install\\redStone.bmp"
+IDB_BITMAP7             BITMAP                  "..\\..\\Install\\stoneMask.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

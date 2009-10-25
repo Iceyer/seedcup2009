@@ -112,6 +112,9 @@ BOOL CHexxagonDlg::OnInitDialog()
     if (Hexxagon::Game::HexxagonGame().Prepare())
     {
         Hexxagon::Game::HexxagonGame().Start();
+        EnterCriticalSection(&m_Critical);
+        Render::SRender().Init();
+        LeaveCriticalSection(&m_Critical);
         return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
     }
     return  FALSE;

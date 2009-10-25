@@ -32,9 +32,14 @@ public:
 
     void RenderSence();
 
+    //获得某一贴图的左上角的像素坐标
+    inline CPoint GetPosInPixel(int x, int y);
+    //初始化成员变量
+    void Init();
+
     void DrawGameInfo();
 
-    void DrawHexagon(int cx, int cy, Hexxagon::MapItem::ItemType iType);
+    void DrawHexagon(int cx, int cy, unsigned bitmapID1, unsigned bitmapID2, Hexxagon::MapItem::ItemType iType = Hexxagon::MapItem::ItemType::EMPTY);
 
     void Render::DrawPlayer1(int cx, int cy, int edgelength);
     
@@ -49,7 +54,10 @@ private:
     CDC     *m_pDC;
     int     m_Width;
     int     m_Height;
-
+    int     m_iStartX;//记录整个贴图的左上角x坐标
+    int     m_iStartY;//记录整个贴图的左上角y坐标
+    int     m_iMapWidth;//记录横向有多少个hole
+    int     m_iMapHeight;//记录纵向有多少个hole
 
     CFont   m_PlayerInfoFont;
 };

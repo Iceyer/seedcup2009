@@ -4,8 +4,10 @@
 #include "..\..\GameCore\Map.hpp"
 #include "..\..\GameCore\Player.hpp"
 
+
 namespace Hexxagon
 {
+    //CMutex g_Mutex(FALSE, NULL);
     class Match
     {
     public:

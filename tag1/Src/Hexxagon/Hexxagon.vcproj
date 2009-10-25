@@ -295,6 +295,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath="..\..\Install\blueStone.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\res\Hexxagon.ico"
 				>
 			</File>
@@ -320,6 +324,14 @@
 			</File>
 			<File
 				RelativePath="..\..\Install\holeRed.bmp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Install\redStone.bmp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Install\stoneMask.bmp"
 				>
 			</File>
 		</Filter>
