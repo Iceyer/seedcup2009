@@ -38,31 +38,30 @@ bool Match::Run()
     m_pJudge->Prepare(m_pMap);
 
     m_pCurActionPlayer = m_pPlayer1;
-    int iCheckRet;
     while (m_pJudge->IsGameEnd() && !m_bStopMath)
     {
+        Sleep(200);
         if (!m_pJudge->IsPlayerCanAction(m_pCurActionPlayer->GetPlayerID()))
         {
             continue;
         }
         m_CurAction = m_pCurActionPlayer->GetAction();
-        iCheckRet = m_pJudge->CheckAction(m_CurAction, m_pCurActionPlayer->GetPlayerID());
-        if (iCheckRet)
+        m_ActionType = m_pJudge->CheckAction(m_CurAction, m_pCurActionPlayer->GetPlayerID());
+        if (m_ActionType)
         {
-
             Render::SRender().EnableMoveAction();
-            while (Render::SRender().IsMoveActionEnd())
+            while (Render::SRender().IsMoveActionEnd() && !m_bStopMath)
             {
                 Sleep(40);
                 UpdateUI();
             }
-            m_pMap->UpdateMap(m_CurAction,iCheckRet);
-            Sleep(40);
+            m_pMap->UpdateMap(m_CurAction,m_ActionType);
             UpdateUI();
+            AfxGetApp()->m_pMainWnd->UpdateWindow();
         }
         //轮流调用两个选手的操作函数
         m_pCurActionPlayer = (m_pCurActionPlayer == m_pPlayer1) ? m_pPlayer2 : m_pPlayer1;
-        Sleep(1000);
+
     }
 
     UpdateUI();
@@ -94,6 +93,11 @@ const Player& Match::GetCurPlayer()
 const Action& Match::GetCurAction()
 {
     return m_CurAction;
+}
+
+int Match::GetActionType()
+{
+    return m_ActionType;
 }
 
 const Judge& Match::GetJudge()

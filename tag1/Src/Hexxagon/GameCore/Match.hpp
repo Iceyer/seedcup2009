@@ -29,6 +29,8 @@ namespace Hexxagon
 
         const Action& GetCurAction();
 
+        int GetActionType();
+
         const Judge& GetJudge();
 
         const Map&  GetMap();
@@ -40,6 +42,7 @@ namespace Hexxagon
         Player*     m_pCurActionPlayer;
         Judge*      m_pJudge;
         bool        m_bStopMath;
+        int         m_ActionType; /*! 0 = Invade, 1 =  copy 2 Move*/
         Action      m_CurAction;
     };
 

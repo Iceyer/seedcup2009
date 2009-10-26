@@ -7,8 +7,7 @@
 #include <afxmt.h>
 
 const double gdCos30 = 0.86602540378443864676372317075294;
-const double HexgaonSize = 20;
-const double HexgaonSizeB = HexgaonSize * gdCos30;
+const double HoleSize = 26;
 int          giN = 0;
 int          giM = 0;
 Render Render::m_Render;
@@ -45,9 +44,9 @@ void Render::Init()
     m_iMapWidth = Game::HexxagonGame().CurMatch()->GetMap().MapWidth();
     m_iMapHeight = Game::HexxagonGame().CurMatch()->GetMap().MapHeigth();
     //原表达式为 200 + (16-iMapWidth)/2*36;
-    m_iStartX = 468 -18*m_iMapWidth; 
+    m_iStartX = 500 -26 * m_iMapWidth * 3 / 4;
     //原表达式为 (600 - iMapHeight*30 - (iMapWidth-1)*15)/2 + (iMapWidth-1)*15;
-    m_iStartY = 285 + (15-30*m_iMapHeight+15*m_iMapWidth)/2; 
+    m_iStartY = 300 - HoleSize * gdCos30 * m_iMapHeight + gdCos30 * HoleSize * (m_iMapWidth - 1) / 2;
 }
 
 Render::~Render()
@@ -68,7 +67,8 @@ void Render::SetSenceSize(int width, int height)
 
 CPoint Render::GetPosInPixel(int x, int y)
 {
-    return CPoint(m_iStartX + x*36, m_iStartY - x*15 + y*30);
+    return CPoint(m_iStartX + x * 36/*3 * HoleSize / 2*/, 
+                  m_iStartY + y * 21.5/*gdCos30 * HoleSize*/ * 2 - x * 21.5/* gdCos30 *HoleSize*/);
 }
 
 void Render::RenderSence()
@@ -78,9 +78,6 @@ void Render::RenderSence()
     {
         return;
     }
-    /*Draw Game Information*/
-    DrawGameInfo();
-
     /*Draw Map*/
     CPoint posItem;
     for (int i =0; i < m_iMapWidth; ++i)
@@ -107,10 +104,14 @@ void Render::RenderSence()
             }
         }
     }
+
     if (m_bMoveAction)
     {
         RenderMoveAction(Game::HexxagonGame().CurMatch()->GetCurAction());
     }
+
+    /*Draw Game Information*/
+    DrawGameInfo();
 }
 
 void Render::EnableMoveAction()
@@ -140,21 +141,29 @@ void Render::RenderMoveAction(const Action& curAction)
     }
     else
     {
+        MapItem::ItemType   ID = (MapItem::ItemType)Game::HexxagonGame().CurMatch()->GetCurPlayer().GetPlayerID();
+        if (Game::HexxagonGame().CurMatch()->GetActionType() == 2)
+        {
+            DrawHexagon(m_PosStart.x, m_PosStart.y, IDB_EMPTY_HOLE, IDB_HOLE_BK, ID);
+        }
+        switch (ID)
+        {
+        case MapItem::PLayer1://玩家1使用蓝色石子
+            DrawPlayer1(m_CurPos.x,m_CurPos.y);
+            break;
+        case MapItem::PLayer2://玩家2使用红色石子
+            DrawPlayer2(m_CurPos.x,m_CurPos.y);
+            break;
+        default:
+            break;
+        }
+
         float deltaX = ((m_PosEnd.x - m_PosStart.x)/double(giM));
         float deltaY = ((m_PosEnd.y - m_PosStart.y)/DOUBLE(giM));
 
         m_CurPos.x = m_PosStart.x + giN * deltaX;
         m_CurPos.y = m_PosStart.y + giN * deltaY;
         giN ++;
-        if (MapItem::PLayer1 == Game::HexxagonGame().CurMatch()->GetCurPlayer().GetPlayerID())
-        {
-            DrawPlayer1(m_CurPos.x,m_CurPos.y);
-        }
-        else
-        {
-            DrawPlayer2(m_CurPos.x,m_CurPos.y);
-        }
-
         if(giN == giM)
         {
             m_bMoveAction = false;
@@ -182,10 +191,10 @@ void Render::DrawHexagon(int cx, int cy, unsigned bitmapID1, unsigned bitmapID2,
     CDC cdctemp;
     cdctemp.CreateCompatibleDC(NULL);
     cdctemp.SelectObject(&hole2);
-    m_pDC->BitBlt(cx, cy, 50, 30, &cdctemp, 0, 0, SRCPAINT);//与源位图与目标位图做“或”运算
+    m_pDC->BitBlt(cx, cy, 50, 43, &cdctemp, 0, 0, SRCPAINT);//与源位图与目标位图做“或”运算
 
     cdctemp.SelectObject(&hole1);
-    m_pDC->BitBlt(cx, cy, 50, 30, &cdctemp, 0, 0, SRCAND);//与源位图与目标位图做“与”运算
+    m_pDC->BitBlt(cx, cy, 50, 43, &cdctemp, 0, 0, SRCAND);//与源位图与目标位图做“与”运算
     cdctemp.DeleteDC();
 }
 
@@ -230,7 +239,7 @@ void Render::DrawGameInfo()
 
     m_pDC->SetTextColor(RGB(200, 200, 200));
     //玩家一信息
-    DrawPlayer1(Xoffset, YPos);
+    DrawPlayer1(Xoffset, YPos - 10);
     m_pDC->TextOut(Xoffset + 60, YPos, _T("Player1"));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
@@ -243,7 +252,7 @@ void Render::DrawGameInfo()
     m_pDC->TextOut(Xoffset, YPos, strInfo);
     YPos += 60;
     //玩家二信息
-    DrawPlayer2(Xoffset, YPos);
+    DrawPlayer2(Xoffset, YPos - 10);
     m_pDC->TextOut(Xoffset + 60, YPos, _T("Player2"));
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
