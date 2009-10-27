@@ -14,6 +14,7 @@
 #define IDB_BLUE_STONE                  134
 #define IDB_RED_STONE                   135
 #define IDB_STONE_BK                    136
+#define IDB_BITMAPICON                  138
 #define IDC_CUSTOM1                     1000
 #define IDC_VIEWS                       1000
 
@@ -21,7 +22,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101

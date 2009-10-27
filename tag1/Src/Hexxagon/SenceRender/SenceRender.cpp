@@ -131,7 +131,7 @@ void Render::RenderMoveAction(const Action& curAction)
     m_PosEnd = Render::SRender().GetPosInPixel(curAction.DesPosX,curAction.DesPosY);
     float crossLength = (float)sqrt(double((m_PosEnd.x-m_PosStart.x)*(m_PosEnd.x-m_PosStart.x) 
         + (m_PosEnd.y-m_PosStart.y)*(m_PosEnd.y-m_PosStart.y)));
-    float delta = 1;
+    float delta = 3;
     if (!m_bMoving)
     {
         m_CurPos = m_PosStart;

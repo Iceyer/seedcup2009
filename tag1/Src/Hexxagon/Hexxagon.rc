@@ -77,15 +77,15 @@ IDR_MAINFRAME           ICON                    "res\\Hexxagon.ico"
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
+IDD_ABOUTBOX DIALOGEX 0, 0, 202, 73
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "关于 Hexxagon"
 FONT 9, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
-    LTEXT           "Hexxagon，1.0 版",IDC_STATIC,42,14,114,8,SS_NOPREFIX
-    LTEXT           "Copyright (C) 2009",IDC_STATIC,42,26,114,8
-    DEFPUSHBUTTON   "确定",IDOK,113,41,50,14,WS_GROUP
+    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,20,20
+    LTEXT           "华中科技大学Dian团队2009年“高德 种子杯”",IDC_STATIC,42,14,143,8,SS_NOPREFIX
+    LTEXT           "written by: 李鹤 汪洋",IDC_STATIC,43,29,114,8
+    DEFPUSHBUTTON   "确定",IDOK,145,52,50,14,WS_GROUP
 END
 
 IDD_HEXXAGON_DIALOG DIALOGEX 0, 0, 320, 200
@@ -147,9 +147,9 @@ BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 163
+        RIGHTMARGIN, 195
         TOPMARGIN, 7
-        BOTTOMMARGIN, 55
+        BOTTOMMARGIN, 66
     END
 
     IDD_HEXXAGON_DIALOG, DIALOG
@@ -175,6 +175,7 @@ IDB_HOLE_BK             BITMAP                  ".\\Bitmap\\HoleBackground.bmp"
 IDB_BLUE_STONE          BITMAP                  ".\\Bitmap\\BlueStone.bmp"
 IDB_RED_STONE           BITMAP                  ".\\Bitmap\\RedStone.bmp"
 IDB_STONE_BK            BITMAP                  ".\\Bitmap\\StoneBackground.bmp"
+IDB_BITMAPICON          BITMAP                  ".\\Bitmap\\seed.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
