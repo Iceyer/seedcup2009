@@ -39,7 +39,8 @@ public:
     bool IsMoveActionEnd();
 
     //获得某一贴图的左上角的像素坐标
-    inline CPoint GetPosInPixel(int x, int y);
+    inline CPoint LogicPos2PixelPos(int x, int y);
+
     //初始化成员变量
     void Init();
 

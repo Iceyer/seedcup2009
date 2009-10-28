@@ -32,6 +32,8 @@ namespace Hexxagon
         ~Map();
 
         bool LoadMap(std::string strMapFileName);
+        
+        void ReLoadMap();
 
         bool SaveMap(std::string strMapFileName);
 
@@ -43,10 +45,13 @@ namespace Hexxagon
 
         int MapHeigth() const;
 
+        const std::string& MapFilePath() const;
     private:
-        MapItem *m_pData;
-        int     m_iMapWidth;
-        int     m_iMapHeight;
+        MapItem*        m_pData;
+        MapItem*        m_pOrgData;
+        int             m_iMapWidth;
+        int             m_iMapHeight;
+        std::string     m_strMapFileName;
     };
 
     class MapMgr
@@ -64,7 +69,10 @@ namespace Hexxagon
 
         MapItor End();
 
+        int MapCnt() const;
+
         Map* AddMap(std::string strMapFileName);
+
     private:
         MapList       m_MapList;
     };

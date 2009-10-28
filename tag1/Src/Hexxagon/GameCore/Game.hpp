@@ -35,14 +35,16 @@ namespace Hexxagon
     public:
         ~Game();
     private:
-        typedef std::vector<Player*> PlayerQueue;
+        typedef std::vector<Player*>    PlayerQueue;
+        typedef std::vector<Match*>     MatchQueue;
 
         Game();
         static Game             m_Game;
         Hexxagon::Match*        m_pCurMatch;
         Hexxagon::Judge*        m_pJudge;
         PlayerQueue             m_PlayerQueue;
+        MatchQueue              m_MatchQueue;
         MapMgr                  m_MapMgr;
-        HANDLE                  m_MatchHandle;
+        HANDLE                  m_MatchLoopHandle;
     };
 }

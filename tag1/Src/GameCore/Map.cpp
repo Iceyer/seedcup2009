@@ -14,6 +14,11 @@ Map::~Map()
         delete[] m_pData;
         m_pData = NULL;
     }
+    if (m_pOrgData)
+    {
+        delete[] m_pOrgData;
+        m_pOrgData = NULL;
+    }
 }
 
 int Map::MapWidth() const
@@ -24,6 +29,11 @@ int Map::MapWidth() const
 int Map::MapHeigth() const
 {
     return m_iMapHeight;
+}
+
+const std::string& Map::MapFilePath() const
+{
+    return m_strMapFileName;
 }
 
 const MapItem& Map::GetMapStatus(const int x, const int y) const
@@ -88,10 +98,13 @@ bool Map::LoadMap(std::string strMapFileName)
     {
         return false;
     }
+    m_strMapFileName = strMapFileName;
     MapFile>>m_iMapWidth;
     MapFile>>m_iMapHeight;
 
     m_pData = new MapItem[m_iMapWidth * m_iMapHeight];
+
+    m_pOrgData = new MapItem[m_iMapWidth * m_iMapHeight];
 
     int ntemp;
     for (int i = 0; i < m_iMapWidth; ++i)
@@ -99,13 +112,19 @@ bool Map::LoadMap(std::string strMapFileName)
         for (int j = 0; j < m_iMapHeight; ++j)
         {
             MapFile>>ntemp;
-            m_pData[i * m_iMapWidth + j].m_Type = static_cast<MapItem::ItemType>(ntemp);
+            m_pOrgData[i * m_iMapWidth + j].m_Type = static_cast<MapItem::ItemType>(ntemp);
         }
     }
     MapFile.close();
+    ReLoadMap();
     return true;
 }
 
+void Map::ReLoadMap()
+{
+    memcpy_s(m_pData, m_iMapWidth * m_iMapHeight * sizeof(MapItem),
+             m_pOrgData, m_iMapWidth * m_iMapHeight * sizeof(MapItem));
+}
 
 MapMgr::MapMgr()
 {
@@ -129,6 +148,11 @@ MapMgr::MapItor MapMgr::Begin()
 MapMgr::MapItor MapMgr::End()
 {
     return  m_MapList.end();
+}
+
+int MapMgr::MapCnt() const
+{
+    return m_MapList.size();
 }
 
 Map* MapMgr::AddMap(std::string strMapFileName)

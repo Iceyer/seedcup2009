@@ -37,13 +37,13 @@ namespace Hexxagon
 
         void SetName(std::string name);
 
-        std::string GetName() const;
+        const std::string& GetName() const;
 
         void SetPlayerID(int id);
 
         int GetPlayerID() const;
 
-        void Prepare(Map* pMap);
+        void EnterMatch(Map* pMap);
 
         Action GetAction(void) const;
 

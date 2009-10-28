@@ -28,7 +28,6 @@ Player::Player(const std::string& DllPath)
     pFuncPlayerName = (pGetPlayerName)GetProcAddress(m_HINST, strGetPlayerName.c_str());
     m_Name = pFuncPlayerName();
 
-    pGetPlayerActionFunc pFuncPlayerAction = NULL;
     m_pActionFunc = (pGetPlayerActionFunc)GetProcAddress(m_HINST, strGetPlayerAction.c_str());
 }
 
@@ -46,7 +45,7 @@ void Player::SetName(std::string name)
     m_Name = name;
 }
 
-std::string Player::GetName() const
+const std::string& Player::GetName() const
 {
     return m_Name;
 }
@@ -61,7 +60,7 @@ int Player::GetPlayerID() const
     return m_ID;
 }
 
-void Player::Prepare(Map* pMap)
+void Player::EnterMatch(Map* pMap)
 {
     pSetMap pFuncSetMap = NULL;
     pFuncSetMap = (pSetMap)GetProcAddress(m_HINST, strSetMapFunc.c_str());

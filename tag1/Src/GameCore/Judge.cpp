@@ -1,4 +1,5 @@
 #include "Judge.hpp"
+#include <fstream>
 
 using namespace Hexxagon;
 
@@ -10,16 +11,11 @@ Judge::Judge()
 {
 }
 
-Judge::Judge(Map* pMapMgr)
-:m_pMap(pMapMgr),m_totalHoles(0),m_stonesOfPlayer1(0),m_stonesOfPlayer2(0)
-{
-}
-
 Judge::~Judge()
 {
 }
 
-void Judge::Prepare(Map* pMap)
+void Judge::EnterMatch(Map* pMap)
 {
     m_pMap = pMap;
 }
@@ -71,6 +67,7 @@ int Judge::CheckAction(const Action& action, int PlayerType)
 
 bool Judge::IsPlayerCanAction(int PlayerID)
 {
+    PlayerID;
     return true;
 }
 
@@ -112,4 +109,46 @@ bool Judge::IsGameEnd()
         return false;
     }
     return true;
+}
+
+void Judge::Prepare()
+{
+    std::ofstream ofResultFile;
+
+    ofResultFile.open(".\\Result.txt", std::ios::out | std::ios::ate);
+
+    if (!ofResultFile.is_open())
+    {
+        return;
+    }
+    ofResultFile.close();
+}
+
+void Judge::LogMatch(Map* pMap, Player* pPlayer1, Player* pPlayer2)
+{
+    std::ofstream ofResultFile;
+
+    ofResultFile.open(".\\Result.txt", std::ios::out | std::ios::app);
+
+    if (!ofResultFile.is_open())
+    {
+        return;
+    }
+
+    ofResultFile<<"Map:"<<pMap->MapFilePath()<<std::endl
+                <<"Player1:"<<pPlayer1->GetName()<<std::endl
+                <<"Score:"<<GetScore(MapItem::PLayer1)<<std::endl
+                <<"Player2:"<<pPlayer2->GetName()<<std::endl
+                <<"Score:"<<GetScore(MapItem::PLayer2)<<std::endl;
+    if (GetScore(MapItem::PLayer1) > GetScore(MapItem::PLayer2))
+    {
+        ofResultFile<<"Winner:"<<std::endl
+                    <<"Player1"<<pPlayer1->GetName()<<std::endl<<std::endl;
+    } 
+    else
+    {
+        ofResultFile<<"Winner:"<<std::endl
+                    <<"Player2"<<pPlayer2->GetName()<<std::endl<<std::endl;
+    }
+    ofResultFile.close();
 }

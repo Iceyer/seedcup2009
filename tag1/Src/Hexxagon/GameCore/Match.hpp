@@ -45,13 +45,4 @@ namespace Hexxagon
         int         m_ActionType; /*! 0 = Invade, 1 =  copy 2 Move*/
         Action      m_CurAction;
     };
-
-    static void RunMatch(void* pMatch)
-    {
-        Match* pCurMatch = static_cast<Match*>(pMatch);
-        if (NULL != pCurMatch)
-        {
-            pCurMatch->Run();
-        }
-    }
 }

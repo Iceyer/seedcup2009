@@ -56,34 +56,49 @@ bool Game::Prepare()
 
 void Game::Start()
 {
-    m_Game.m_pJudge = new Judge(*m_Game.m_MapMgr.Begin());
-    PlayerQueue::iterator      itorCurPlayer;
-    itorCurPlayer = m_Game.m_PlayerQueue.begin();
-    Player* pPlayer1 = (*itorCurPlayer++);
-    Player* pPlayer2 = (*itorCurPlayer);
+    //InitMatchQueue
+    m_pJudge = new Judge;
+    m_pJudge->Prepare();
 
-    m_Game.m_pCurMatch = new Match(*m_Game.m_MapMgr.Begin(), pPlayer1, pPlayer2, m_Game.m_pJudge);
-    //m_Game.m_pCurMatch->Run();
-    //
-    m_MatchHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::RunMatch, 0 , m_pCurMatch));
-    /*GameLoop*/
-    //m_MatchHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::Game::MatchLoop, 0 , NULL));
+    PlayerQueue::iterator      itorPlayer1;
+    PlayerQueue::iterator      itorPlayer2;
+    MapMgr::MapItor             itorMap;
+    for (itorMap = m_MapMgr.Begin(); itorMap != m_MapMgr.End(); ++itorMap)
+    {
+        itorPlayer1 = m_Game.m_PlayerQueue.begin();
+        for (; itorPlayer1 != m_PlayerQueue.end(); ++itorPlayer1)
+        {
+            itorPlayer2 = itorPlayer1;
+            ++itorPlayer2;
+            for (; itorPlayer2 != m_PlayerQueue.end(); ++itorPlayer2)
+            {
+                m_pCurMatch = new Match(*itorMap,
+                                        *itorPlayer1,
+                                        *itorPlayer2,
+                                        m_pJudge);
+                m_MatchQueue.push_back(m_pCurMatch);
+                m_pCurMatch = new Match(*itorMap,
+                                        *itorPlayer2,
+                                        *itorPlayer1,
+                                        m_pJudge);
+                m_MatchQueue.push_back(m_pCurMatch);
+            }
+        }
+    }
+
+    m_pCurMatch = *m_MatchQueue.begin();
+    m_MatchLoopHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::Game::MatchLoop, 0 , NULL));
 }
 
 void Game::MatchLoop(void* /*pGame*/)
 {
-    m_Game.m_pJudge = new Judge(*m_Game.m_MapMgr.Begin());
-    PlayerQueue::iterator      itorCurPlayer;
-    itorCurPlayer = m_Game.m_PlayerQueue.begin();
-    Player* pPlayer1 = (*itorCurPlayer++);
-    Player* pPlayer2 = (*itorCurPlayer);
-
-    m_Game.m_pCurMatch = new Match(*m_Game.m_MapMgr.Begin(), pPlayer1, pPlayer2, m_Game.m_pJudge);
-    m_Game.m_pCurMatch->Run();
-    //
-    //m_MatchHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::RunMatch, 0 , m_pCurMatch));
+    MatchQueue::iterator    itorMatch;
+    for (itorMatch = m_Game.m_MatchQueue.begin(); itorMatch != m_Game.m_MatchQueue.end(); ++itorMatch)
+    {
+        m_Game.m_pCurMatch = *itorMatch;
+        m_Game.m_pCurMatch->Run();
+    }
 }
-
 
 void Game::Pause()
 {
@@ -94,7 +109,7 @@ void Game::End()
     if (m_pCurMatch)
     {
         m_pCurMatch->Stop();
-        WaitForSingleObject(m_MatchHandle, INFINITE);
+        WaitForSingleObject(m_MatchLoopHandle, INFINITE);
     }
 }
 
@@ -133,8 +148,15 @@ bool Game::LoadGame(std::string strSaveFileName)
           m_MapMgr.AddMap(val);
         }
     }
-
     SaveFile.close();
+
+    //Player cnt must >= 2
+    //Map cnt must >= 1
+    if (m_MapMgr.MapCnt() < 1 || m_PlayerQueue.size() < 2)
+    {
+        MessageBox(NULL, _T("加载地图或选手AI失败"), NULL, 0);
+        return false;
+    }
     return true;
 }
 
@@ -142,6 +164,7 @@ bool Game::LoadPlayer(std::string DllPath)
 {
     //Load dll
     Player* pNewPlayer = new Player(DllPath);
+
     //Add a Player
     m_PlayerQueue.push_back(pNewPlayer);
     return  true;

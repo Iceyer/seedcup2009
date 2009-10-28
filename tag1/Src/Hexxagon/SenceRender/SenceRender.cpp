@@ -39,8 +39,6 @@ Render::Render()
 
 void Render::Init()
 {
-    /*Calc The Start Point*/
-    using namespace Hexxagon;
     m_iMapWidth = Game::HexxagonGame().CurMatch()->GetMap().MapWidth();
     m_iMapHeight = Game::HexxagonGame().CurMatch()->GetMap().MapHeigth();
     //原表达式为 200 + (16-iMapWidth)/2*36;
@@ -65,7 +63,7 @@ void Render::SetSenceSize(int width, int height)
     m_Height = height;
 }
 
-CPoint Render::GetPosInPixel(int x, int y)
+CPoint Render::LogicPos2PixelPos(int x, int y)
 {
     return CPoint(m_iStartX + x * 36/*3 * HoleSize / 2*/, 
                   m_iStartY + y * 21.5/*gdCos30 * HoleSize*/ * 2 - x * 21.5/* gdCos30 *HoleSize*/);
@@ -78,6 +76,8 @@ void Render::RenderSence()
     {
         return;
     }
+    /*Init Need Data*/
+    Init();
     /*Draw Map*/
     CPoint posItem;
     for (int i =0; i < m_iMapWidth; ++i)
@@ -85,7 +85,7 @@ void Render::RenderSence()
         for (int j = 0; j < m_iMapHeight; ++j)
         {
             MapItem curItem = Game::HexxagonGame().CurMatch()->GetMap().GetMapStatus(i, j);
-            posItem = GetPosInPixel(i,j);
+            posItem = LogicPos2PixelPos(i,j);
             switch (curItem.m_Type)
             {
             case MapItem::INVALID:
@@ -94,10 +94,14 @@ void Render::RenderSence()
                 DrawHexagon(posItem.x, posItem.y, IDB_EMPTY_HOLE, IDB_HOLE_BK, curItem.m_Type);
                 break;
             case MapItem::PLayer1://玩家1使用蓝色石子
-                DrawHexagon(posItem.x, posItem.y, IDB_BLUE_HOLE, IDB_HOLE_BK, curItem.m_Type);
+                DrawHexagon(posItem.x, posItem.y, IDB_EMPTY_HOLE, IDB_HOLE_BK, curItem.m_Type);
+                DrawPlayer1(posItem.x, posItem.y);
+                //DrawHexagon(posItem.x, posItem.y, IDB_BLUE_HOLE, IDB_HOLE_BK, curItem.m_Type);
                 break;
             case MapItem::PLayer2://玩家2使用红色石子
-                DrawHexagon(posItem.x, posItem.y, IDB_RED_HOLE, IDB_HOLE_BK, curItem.m_Type);
+                DrawHexagon(posItem.x, posItem.y, IDB_EMPTY_HOLE, IDB_HOLE_BK, curItem.m_Type);
+                DrawPlayer2(posItem.x, posItem.y);
+                //DrawHexagon(posItem.x, posItem.y, IDB_RED_HOLE, IDB_HOLE_BK, curItem.m_Type);
                 break;
             default:
                 break;
@@ -127,8 +131,8 @@ bool Render::IsMoveActionEnd()
 
 void Render::RenderMoveAction(const Action& curAction)
 {
-    m_PosStart = Render::SRender().GetPosInPixel(curAction.PiecePosX,curAction.PiecePosY);
-    m_PosEnd = Render::SRender().GetPosInPixel(curAction.DesPosX,curAction.DesPosY);
+    m_PosStart = Render::SRender().LogicPos2PixelPos(curAction.PiecePosX,curAction.PiecePosY);
+    m_PosEnd = Render::SRender().LogicPos2PixelPos(curAction.DesPosX,curAction.DesPosY);
     float crossLength = (float)sqrt(double((m_PosEnd.x-m_PosStart.x)*(m_PosEnd.x-m_PosStart.x) 
         + (m_PosEnd.y-m_PosStart.y)*(m_PosEnd.y-m_PosStart.y)));
     float delta = 3;

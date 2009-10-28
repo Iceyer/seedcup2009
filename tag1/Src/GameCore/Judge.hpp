@@ -1,6 +1,7 @@
 #pragma once
 
 #include "..\Player\PlayerAction.hpp"
+#include "Player.hpp"
 #include "Map.hpp"
 
 namespace Hexxagon
@@ -9,10 +10,12 @@ namespace Hexxagon
     {
     public:
         Judge();
-        Judge(Map* pMapMgr);
+
         ~Judge();
 
-        void Prepare(Map* pMap);
+        void Prepare();
+
+        void EnterMatch(Map* pMap);
 
         int CheckAction(const Action& action, int PlayerID);
 
@@ -21,6 +24,8 @@ namespace Hexxagon
         int GetScore(int PlayerID) const;
 
         bool IsGameEnd();
+
+        void LogMatch(Map* pMap, Player* pPlayer1, Player* pPlayer2);
     private:
         Map  *m_pMap;
         int  m_totalHoles;

@@ -4,6 +4,8 @@
 #include "..\SenceRender\SenceRender.hpp"
 #include "..\resource.h"
 
+//#define GUI_ENABLE
+
 using namespace Hexxagon;
 
 Match::Match()
@@ -31,16 +33,19 @@ Match::~Match()
 
 bool Match::Run()
 {
-    m_pPlayer1->Prepare(m_pMap);
+    m_pMap->ReLoadMap();
+    m_pPlayer1->EnterMatch(m_pMap);
     m_pPlayer1->SetPlayerID(MapItem::PLayer1);
-    m_pPlayer2->Prepare(m_pMap);
+    m_pPlayer2->EnterMatch(m_pMap);
     m_pPlayer2->SetPlayerID(MapItem::PLayer2);
-    m_pJudge->Prepare(m_pMap);
+    m_pJudge->EnterMatch(m_pMap);
 
     m_pCurActionPlayer = m_pPlayer1;
-    while (m_pJudge->IsGameEnd() && !m_bStopMath)
+    while (m_pJudge->IsGameEnd() || m_bStopMath)
     {
+#ifdef GUI_ENABLE
         Sleep(200);
+#endif
         if (!m_pJudge->IsPlayerCanAction(m_pCurActionPlayer->GetPlayerID()))
         {
             continue;
@@ -49,19 +54,29 @@ bool Match::Run()
         m_ActionType = m_pJudge->CheckAction(m_CurAction, m_pCurActionPlayer->GetPlayerID());
         if (m_ActionType)
         {
+
+#ifdef GUI_ENABLE
             Render::SRender().EnableMoveAction();
             while (Render::SRender().IsMoveActionEnd() && !m_bStopMath)
             {
                 Sleep(40);
                 UpdateUI();
             }
+#endif
             m_pMap->UpdateMap(m_CurAction,m_ActionType);
+
+#ifdef GUI_ENABLE
             UpdateUI();
             AfxGetApp()->m_pMainWnd->UpdateWindow();
+#endif
         }
         //轮流调用两个选手的操作函数
         m_pCurActionPlayer = (m_pCurActionPlayer == m_pPlayer1) ? m_pPlayer2 : m_pPlayer1;
+    }
 
+   // if (m_pJudge->IsGameEnd())
+    {
+        m_pJudge->LogMatch(m_pMap, m_pPlayer1, m_pPlayer2);
     }
 
     UpdateUI();

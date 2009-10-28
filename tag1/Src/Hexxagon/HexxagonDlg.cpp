@@ -113,9 +113,6 @@ BOOL CHexxagonDlg::OnInitDialog()
     if (Hexxagon::Game::HexxagonGame().Prepare())
     {
         Hexxagon::Game::HexxagonGame().Start();
-        EnterCriticalSection(&m_Critical);
-        Render::SRender().Init();
-        LeaveCriticalSection(&m_Critical);
         return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
     }
     return  FALSE;
@@ -232,6 +229,10 @@ void CHexxagonDlg::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
     if (VK_F2 == nChar)
     {
         MessageBox(_T("Don't Ask Me! I DON'T Know Anything ..."));
+    }
+    if (VK_F2 == nChar)
+    {
+        //MessageBox(_T("Don't Ask Me! I DON'T Know Anything ..."));
     }
     CDialog::OnKeyUp(nChar, nRepCnt, nFlags);
 }
