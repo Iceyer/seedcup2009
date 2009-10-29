@@ -17,23 +17,21 @@ Game::Game()
 
 Game::~Game()
 {
-    if (m_pCurMatch)
+    m_pCurMatch = NULL;
+    MatchQueue::iterator    itorMatch;
+    itorMatch = m_MatchQueue.begin();
+    for (; itorMatch != m_MatchQueue.end(); ++itorMatch)
     {
-        delete m_pCurMatch;
-        m_pCurMatch = NULL;
+        delete *itorMatch;
     }
+
     if (m_pJudge)
     {
         delete m_pJudge; 
         m_pJudge = NULL;
     }
-    /*The Code below would case memory problem*/
-//     while(m_PlayerQueue.back())
-//     {
-//         delete m_PlayerQueue.back();
-//         m_PlayerQueue.pop_back();
-//     }
-    PlayerQueue::iterator itor = m_PlayerQueue.begin();
+
+     PlayerQueue::iterator itor = m_PlayerQueue.begin();
     for (; itor != m_PlayerQueue.end(); ++itor)
     {
         delete *itor;

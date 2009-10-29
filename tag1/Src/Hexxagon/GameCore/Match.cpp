@@ -54,7 +54,6 @@ bool Match::Run()
         m_ActionType = m_pJudge->CheckAction(m_CurAction, m_pCurActionPlayer->GetPlayerID());
         if (m_ActionType)
         {
-
 #ifdef GUI_ENABLE
             Render::SRender().EnableMoveAction();
             while (Render::SRender().IsMoveActionEnd() && !m_bStopMath)
@@ -74,10 +73,7 @@ bool Match::Run()
         m_pCurActionPlayer = (m_pCurActionPlayer == m_pPlayer1) ? m_pPlayer2 : m_pPlayer1;
     }
 
-   // if (m_pJudge->IsGameEnd())
-    {
-        m_pJudge->LogMatch(m_pMap, m_pPlayer1, m_pPlayer2);
-    }
+    m_pJudge->LogMatch(m_pMap, m_pPlayer1, m_pPlayer2);
 
     UpdateUI();
     return false;
