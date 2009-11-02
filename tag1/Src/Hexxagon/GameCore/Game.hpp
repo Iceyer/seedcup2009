@@ -35,7 +35,6 @@ namespace Hexxagon
     public:
         ~Game();
     private:
-        typedef std::vector<Player*>    PlayerQueue;
         typedef std::vector<Match*>     MatchQueue;
 
         Game();

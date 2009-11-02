@@ -96,6 +96,7 @@ void Game::MatchLoop(void* /*pGame*/)
         m_Game.m_pCurMatch = *itorMatch;
         m_Game.m_pCurMatch->Run();
     }
+    m_Game.m_pJudge->LogGame(m_Game.m_PlayerQueue);
 }
 
 void Game::Pause()

@@ -152,3 +152,29 @@ void Judge::LogMatch(Map* pMap, Player* pPlayer1, Player* pPlayer2)
     }
     ofResultFile.close();
 }
+
+void Judge::LogGame(const PlayerQueue& playerQueue)
+{
+    std::ofstream ofResultFile;
+
+    ofResultFile.open(".\\Result.txt", std::ios::out | std::ios::app);
+
+    if (!ofResultFile.is_open())
+    {
+        return;
+    }
+
+    PlayerQueue::const_iterator     itorpPlayer;
+
+    for (itorpPlayer = playerQueue.begin(); itorpPlayer != playerQueue.end(); ++itorpPlayer)
+    {
+        ofResultFile<<(*itorpPlayer)->GetName()<<std::endl
+                    <<"TotalMatchCnt :  "<<(*itorpPlayer)->TotalMatchCnt()<<std::endl
+                    <<"WinMatchCnt :    "<<(*itorpPlayer)->WinMatchCnt()<<std::endl
+                    <<"LoseMatchCnt :   "<<(*itorpPlayer)->LoseMatchCnt()<<std::endl
+                    <<"DrawMatchCnt :   "<<(*itorpPlayer)->DrawMatchCnt()<<std::endl
+                    <<std::endl;
+    }
+
+    ofResultFile.close();
+}

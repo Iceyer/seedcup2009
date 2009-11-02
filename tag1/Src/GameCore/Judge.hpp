@@ -26,6 +26,8 @@ namespace Hexxagon
         bool IsGameEnd();
 
         void LogMatch(Map* pMap, Player* pPlayer1, Player* pPlayer2);
+
+        void LogGame(const PlayerQueue& playerQueue);
     private:
         Map  *m_pMap;
         int  m_totalHoles;

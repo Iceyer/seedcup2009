@@ -75,6 +75,22 @@ bool Match::Run()
 
     m_pJudge->LogMatch(m_pMap, m_pPlayer1, m_pPlayer2);
 
+    if (m_pJudge->GetScore(m_pPlayer1->GetPlayerID()) == m_pJudge->GetScore(m_pPlayer2->GetPlayerID()))
+    {
+        m_pPlayer1->DrawMatch();
+        m_pPlayer2->DrawMatch();
+    }
+    else if (m_pJudge->GetScore(m_pPlayer1->GetPlayerID()) > m_pJudge->GetScore(m_pPlayer2->GetPlayerID()))
+    {
+        m_pPlayer1->WinMatch();
+        m_pPlayer2->LoseMatch();
+    }
+    else if (m_pJudge->GetScore(m_pPlayer1->GetPlayerID()) < m_pJudge->GetScore(m_pPlayer2->GetPlayerID()))
+    {
+        m_pPlayer1->LoseMatch();
+        m_pPlayer2->WinMatch();
+    }
+
     UpdateUI();
     return false;
 }

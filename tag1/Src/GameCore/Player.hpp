@@ -45,6 +45,20 @@ namespace Hexxagon
 
         void EnterMatch(Map* pMap);
 
+        void WinMatch();
+
+        void LoseMatch();
+
+        void DrawMatch();
+
+        int WinMatchCnt();
+
+        int LoseMatchCnt();
+
+        int DrawMatchCnt();
+
+        int TotalMatchCnt();
+
         Action GetAction(void) const;
 
     protected:
@@ -55,5 +69,12 @@ namespace Hexxagon
         std::string             m_Name;
         int                     m_ID;
         pGetPlayerActionFunc    m_pActionFunc;
+
+        unsigned int            m_WinMatchCnt;      ///< the win match count
+        unsigned int            m_LoseMatchCnt;     ///< the lose count
+        unsigned int            m_DrawMatchCnt;     ///< the draw match count
+        unsigned int            m_TotalMatchCnt;    ///< the total count
     };
+
+    typedef std::vector<Player*>    PlayerQueue;
 }
