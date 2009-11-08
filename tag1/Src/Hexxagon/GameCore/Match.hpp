@@ -7,7 +7,6 @@
 
 namespace Hexxagon
 {
-    //CMutex g_Mutex(FALSE, NULL);
     class Match
     {
     public:
@@ -18,8 +17,6 @@ namespace Hexxagon
         ~Match();
 
         bool Run();
-
-        void Stop();
 
         void UpdateUI();
 
@@ -41,7 +38,6 @@ namespace Hexxagon
         Player*     m_pPlayer2;
         Player*     m_pCurActionPlayer;
         Judge*      m_pJudge;
-        bool        m_bStopMath;
         int         m_ActionType; /*! 0 = Invade, 1 =  copy 2 Move*/
         Action      m_CurAction;
     };

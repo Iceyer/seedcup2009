@@ -4,13 +4,13 @@
 #include "..\SenceRender\SenceRender.hpp"
 #include "..\resource.h"
 
-//#define GUI_ENABLE
+//#define 
 
 using namespace Hexxagon;
 
 Match::Match()
-: m_bStopMath(false)
-, m_pMap(NULL)
+/*: m_bStopMath(false)*/
+: m_pMap(NULL)
 , m_pPlayer1(NULL)
 , m_pPlayer2(NULL)
 , m_pJudge(NULL)
@@ -18,8 +18,8 @@ Match::Match()
 }
 
 Match::Match(Map* map, Player* player1, Player* player2, Judge* judge)
-: m_bStopMath(false)
-, m_pCurActionPlayer(NULL)
+/*: m_bStopMath(false)*/
+: m_pCurActionPlayer(NULL)
 {
     m_pMap = map;
     m_pPlayer1 = player1;
@@ -41,11 +41,11 @@ bool Match::Run()
     m_pJudge->EnterMatch(m_pMap);
 
     m_pCurActionPlayer = m_pPlayer1;
-    while (m_pJudge->IsGameEnd() || m_bStopMath)
+    EnterCriticalSection(&m_Critical);
+    while (m_pJudge->IsGameEnd() && !Game::HexxagonGame().gbStopMath)
     {
-#ifdef GUI_ENABLE
-        Sleep(200);
-#endif
+        LeaveCriticalSection(&m_Critical);
+        Sleep(Game::HexxagonGame().gbUIEnable ? 200 : 0);
         if (!m_pJudge->IsPlayerCanAction(m_pCurActionPlayer->GetPlayerID()))
         {
             continue;
@@ -54,24 +54,29 @@ bool Match::Run()
         m_ActionType = m_pJudge->CheckAction(m_CurAction, m_pCurActionPlayer->GetPlayerID());
         if (m_ActionType)
         {
-#ifdef GUI_ENABLE
-            Render::SRender().EnableMoveAction();
-            while (Render::SRender().IsMoveActionEnd() && !m_bStopMath)
+            EnterCriticalSection(&m_Critical);
+            if (Game::HexxagonGame().gbUIEnable)
             {
-                Sleep(40);
-                UpdateUI();
+                Render::SRender().EnableMoveAction();
+                LeaveCriticalSection(&m_Critical);
+                EnterCriticalSection(&m_Critical);
+                while (Render::SRender().IsMoveActionEnd() && !Game::HexxagonGame().gbStopMath)
+                {
+                    LeaveCriticalSection(&m_Critical);
+                    UpdateUI();
+                    EnterCriticalSection(&m_Critical);
+                }
+                LeaveCriticalSection(&m_Critical);
             }
-#endif
-            m_pMap->UpdateMap(m_CurAction,m_ActionType);
-
-#ifdef GUI_ENABLE
+            LeaveCriticalSection(&m_Critical);
+            m_pMap->UpdateMap(m_CurAction, m_ActionType);
             UpdateUI();
-            AfxGetApp()->m_pMainWnd->UpdateWindow();
-#endif
         }
         //轮流调用两个选手的操作函数
         m_pCurActionPlayer = (m_pCurActionPlayer == m_pPlayer1) ? m_pPlayer2 : m_pPlayer1;
+        EnterCriticalSection(&m_Critical);
     }
+    LeaveCriticalSection(&m_Critical);
 
     m_pJudge->LogMatch(m_pMap, m_pPlayer1, m_pPlayer2);
 
@@ -90,14 +95,8 @@ bool Match::Run()
         m_pPlayer1->LoseMatch();
         m_pPlayer2->WinMatch();
     }
-
     UpdateUI();
     return false;
-}
-
-void Match::Stop()
-{
-    m_bStopMath = true;
 }
 
 const Player& Match::GetPlayer(int PlayerID)
@@ -139,8 +138,9 @@ const Map& Match::GetMap()
 
 void Match::UpdateUI()
 {
-    if (AfxGetApp()->m_pMainWnd)
+    if (AfxGetApp() && AfxGetApp()->m_pMainWnd)
     {
         AfxGetApp()->m_pMainWnd->Invalidate();
+        return;
     }
 }

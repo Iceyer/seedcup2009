@@ -5,11 +5,15 @@
 #include "..\..\GameCore\Judge.hpp"
 #include "Match.hpp"
 
+extern CRITICAL_SECTION m_Critical;
+
 namespace Hexxagon
 {
+
     class Game
     {
     public:
+        typedef std::vector<Match*>     MatchQueue;
 
         static Game& HexxagonGame()
         {
@@ -34,9 +38,12 @@ namespace Hexxagon
 
     public:
         ~Game();
-    private:
-        typedef std::vector<Match*>     MatchQueue;
 
+        volatile bool gbStopMath;
+        volatile bool gbUIEnable;
+        volatile int gDelay;
+
+    private:
         Game();
         static Game             m_Game;
         Hexxagon::Match*        m_pCurMatch;

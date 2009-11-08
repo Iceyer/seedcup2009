@@ -30,6 +30,8 @@ public:
 
     void Render::SetSenceSize(int x, int y);
 
+    void DrawPreScreen();
+
     void RenderSence();
 
     void RenderMoveAction(const Action& curAction);
@@ -67,11 +69,13 @@ private:
     int     m_iMapHeight;       //记录纵向有多少个hole
 
     CFont   m_PlayerInfoFont;
+    CFont   m_PreInfoFont;
 
     CPoint  m_PosStart;
     CPoint  m_PosEnd;
     CPoint  m_CurPos;
 
+public:
     bool    m_bMoveAction;
     bool    m_bMoving;
 };

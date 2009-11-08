@@ -35,6 +35,10 @@ Render::Render()
     ::strncpy_s(font.lfFaceName, _T("微软雅黑"), 31);
 
     m_PlayerInfoFont.CreateFontIndirect(&font);
+
+    font.lfHeight = -40;
+    ::strncpy_s(font.lfFaceName, _T("Courier New"), 31);
+    m_PreInfoFont.CreateFontIndirect(&font);
 }
 
 void Render::Init()
@@ -74,6 +78,7 @@ void Render::RenderSence()
     //CurMatch为空，则游戏未正常初始化
     if(!Game::HexxagonGame().CurMatch())
     {
+        DrawPreScreen();
         return;
     }
     /*Init Need Data*/
@@ -129,8 +134,21 @@ bool Render::IsMoveActionEnd()
     return m_bMoveAction;
 }
 
+void Render::DrawPreScreen()
+{
+    CFont*      pOldFont = m_pDC->SelectObject(&m_PreInfoFont);
+    m_pDC->SetTextColor(gColorBlue);
+    m_pDC->SetTextAlign(TA_CENTER | TA_BASELINE);
+    m_pDC->TextOut(m_Width / 2, m_Height / 2, _T("Press F5 to Start Game"));
+    m_pDC->SelectObject(pOldFont);
+}
+
 void Render::RenderMoveAction(const Action& curAction)
 {
+    if(!m_bMoveAction)
+    {
+        return;
+    }
     m_PosStart = Render::SRender().LogicPos2PixelPos(curAction.PiecePosX,curAction.PiecePosY);
     m_PosEnd = Render::SRender().LogicPos2PixelPos(curAction.DesPosX,curAction.DesPosY);
     float crossLength = (float)sqrt(double((m_PosEnd.x-m_PosStart.x)*(m_PosEnd.x-m_PosStart.x) 
@@ -216,7 +234,7 @@ void Render::DrawGameInfo()
 {
     using namespace Hexxagon;
     int         Xoffset = 20;
-    int         Yoffset = 60;
+    int         Yoffset = 40;
     int         Xborder = 200;
     int         YDiv = 30;
     int         YPos = Yoffset;
@@ -269,9 +287,13 @@ void Render::DrawGameInfo()
     m_pDC->TextOut(Xoffset, YPos, strInfo);
     //书写帮助信息
     YPos += 60;
-    m_pDC->TextOut(Xoffset, YPos, _T("For More Help"));
-    YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Press F2"));
+    YPos += 30;
+    m_pDC->TextOut(Xoffset, YPos, _T("For More Help"));
+    YPos += 60;
+    m_pDC->TextOut(Xoffset, YPos, _T("Press F3"));
+    YPos += 30;
+    m_pDC->TextOut(Xoffset, YPos, _T("To Accelerate"));
     m_pDC->SelectObject(pOldFont);
     m_pDC->SelectObject(pOldPen);
 }

@@ -4,6 +4,7 @@
 #include "Game.hpp"
 #include "..\..\Player\PlayerAction.hpp"
 
+CRITICAL_SECTION m_Critical;
 
 #include <fstream>
 
@@ -13,6 +14,9 @@ Game Game::m_Game;
 
 Game::Game()
 {
+    gbStopMath = false;
+    gbUIEnable = true;
+    gDelay = 200;
 }
 
 Game::~Game()
@@ -107,7 +111,6 @@ void Game::End()
 {
     if (m_pCurMatch)
     {
-        m_pCurMatch->Stop();
         WaitForSingleObject(m_MatchLoopHandle, INFINITE);
     }
 }

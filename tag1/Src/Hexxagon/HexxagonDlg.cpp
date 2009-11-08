@@ -110,11 +110,6 @@ BOOL CHexxagonDlg::OnInitDialog()
     SetWindowPos(NULL, 0, 0, 800, 600, SWP_SHOWWINDOW);
     ::InitializeCriticalSection(&m_Critical);
 
-    if (Hexxagon::Game::HexxagonGame().Prepare())
-    {
-        Hexxagon::Game::HexxagonGame().Start();
-        return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
-    }
     return  FALSE;
 }
 
@@ -219,20 +214,43 @@ void CHexxagonDlg::OnDestroy()
 {
     CDialog::OnDestroy();
     EnterCriticalSection(&m_Critical);
-    Hexxagon::Game::HexxagonGame().End();
+    Hexxagon::Game::HexxagonGame().gbStopMath = true;
     LeaveCriticalSection(&m_Critical);
+    Hexxagon::Game::HexxagonGame().End();
 }
 
 void CHexxagonDlg::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
     // TODO: 在此添加消息处理程序代码和/或调用默认值
-    if (VK_F2 == nChar)
+    switch (nChar)
     {
+    case VK_F2:
         MessageBox(_T("Don't Ask Me! I DON'T Know Anything ..."));
-    }
-    if (VK_F2 == nChar)
-    {
-        //MessageBox(_T("Don't Ask Me! I DON'T Know Anything ..."));
+        break;
+    case VK_F3:
+        DisableUI();
+        break;
+    case VK_F5:
+        StartGame();
+        break;
+    default:
+        break;
     }
     CDialog::OnKeyUp(nChar, nRepCnt, nFlags);
+}
+
+void CHexxagonDlg::StartGame()
+{
+    if (Hexxagon::Game::HexxagonGame().Prepare())
+    {
+        Hexxagon::Game::HexxagonGame().Start();
+    }
+}
+
+void CHexxagonDlg::DisableUI()
+{
+    EnterCriticalSection(&m_Critical);
+    Hexxagon::Game::HexxagonGame().gbUIEnable = false;
+    Render::SRender().m_bMoveAction = false;
+    LeaveCriticalSection(&m_Critical);
 }
