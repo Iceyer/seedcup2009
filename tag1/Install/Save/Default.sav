@@ -1,4 +1,4 @@
 Map=".\Map\1.map"
 Map=".\Map\2.map"
 Player=".\Player\Player.dll"
-Player=".\Player\Player.dll"
+Player=".\Player\EasyAI.dll"

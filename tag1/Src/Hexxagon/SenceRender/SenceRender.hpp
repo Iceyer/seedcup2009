@@ -10,6 +10,7 @@ const COLORREF gColorBlue   = RGB(0, 0, 255);
 const COLORREF gColorYellow = RGB(255, 255, 0);
 const COLORREF gColorWhite  = RGB(255, 255, 255);
 const COLORREF gColorBlack  = RGB(0, 0, 0);
+const COLORREF gColorGrey200  = RGB(200, 200, 200);
 
 const COLORREF gBackGroundColor = gColorBlack;
 
@@ -33,6 +34,8 @@ public:
     void DrawPreScreen();
 
     void RenderSence();
+
+    void DrawMatchEndInfo();
 
     void RenderMoveAction(const Action& curAction);
 

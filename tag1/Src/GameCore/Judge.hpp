@@ -19,6 +19,8 @@ namespace Hexxagon
 
         int CheckAction(const Action& action, int PlayerID);
 
+        bool CheckPlayerEnable(int PlayerID);
+
         bool IsPlayerCanAction(int PlayerID);
 
         int GetScore(int PlayerID) const;

@@ -9,17 +9,19 @@
 using namespace Hexxagon;
 
 Match::Match()
-/*: m_bStopMath(false)*/
-: m_pMap(NULL)
+: m_bMatchEnd(false)
+, m_pMap(NULL)
 , m_pPlayer1(NULL)
 , m_pPlayer2(NULL)
 , m_pJudge(NULL)
+, m_pWiner(NULL)
 {
 }
 
 Match::Match(Map* map, Player* player1, Player* player2, Judge* judge)
-/*: m_bStopMath(false)*/
-: m_pCurActionPlayer(NULL)
+: m_bMatchEnd(false)
+, m_pCurActionPlayer(NULL)
+, m_pWiner(NULL)
 {
     m_pMap = map;
     m_pPlayer1 = player1;
@@ -33,6 +35,7 @@ Match::~Match()
 
 bool Match::Run()
 {
+    m_bMatchEnd = false;
     m_pMap->ReLoadMap();
     m_pPlayer1->EnterMatch(m_pMap);
     m_pPlayer1->SetPlayerID(MapItem::PLayer1);
@@ -50,8 +53,12 @@ bool Match::Run()
         {
             continue;
         }
+        //Check Player Can Action
+        //bool bCanAction = true;
+        //bCanAction = m_pJudge->CheckPlayerEnable(m_pCurActionPlayer->GetPlayerID());
         m_CurAction = m_pCurActionPlayer->GetAction();
         m_ActionType = m_pJudge->CheckAction(m_CurAction, m_pCurActionPlayer->GetPlayerID());
+        //m_ActionType 非零时操作合法。
         if (m_ActionType)
         {
             EnterCriticalSection(&m_Critical);
@@ -63,6 +70,7 @@ bool Match::Run()
                 while (Render::SRender().IsMoveActionEnd() && !Game::HexxagonGame().gbStopMath)
                 {
                     LeaveCriticalSection(&m_Critical);
+                    Sleep(40);
                     UpdateUI();
                     EnterCriticalSection(&m_Critical);
                 }
@@ -70,8 +78,8 @@ bool Match::Run()
             }
             LeaveCriticalSection(&m_Critical);
             m_pMap->UpdateMap(m_CurAction, m_ActionType);
-            UpdateUI();
         }
+        UpdateUI();
         //轮流调用两个选手的操作函数
         m_pCurActionPlayer = (m_pCurActionPlayer == m_pPlayer1) ? m_pPlayer2 : m_pPlayer1;
         EnterCriticalSection(&m_Critical);
@@ -84,17 +92,23 @@ bool Match::Run()
     {
         m_pPlayer1->DrawMatch();
         m_pPlayer2->DrawMatch();
+        m_pWiner = NULL;
     }
     else if (m_pJudge->GetScore(m_pPlayer1->GetPlayerID()) > m_pJudge->GetScore(m_pPlayer2->GetPlayerID()))
     {
         m_pPlayer1->WinMatch();
         m_pPlayer2->LoseMatch();
+        m_pWiner = m_pPlayer1;
     }
     else if (m_pJudge->GetScore(m_pPlayer1->GetPlayerID()) < m_pJudge->GetScore(m_pPlayer2->GetPlayerID()))
     {
         m_pPlayer1->LoseMatch();
         m_pPlayer2->WinMatch();
+        m_pWiner = m_pPlayer2;
     }
+
+    m_bMatchEnd = true;
+
     UpdateUI();
     return false;
 }
@@ -134,6 +148,16 @@ const Judge& Match::GetJudge()
 const Map& Match::GetMap()
 {
     return *m_pMap;
+}
+
+bool Match::IsMatchEnd()
+{
+    return m_bMatchEnd;
+}
+
+Player* Match::Winner()
+{
+    return m_pWiner;
 }
 
 void Match::UpdateUI()

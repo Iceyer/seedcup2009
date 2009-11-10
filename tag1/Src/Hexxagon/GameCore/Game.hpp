@@ -26,6 +26,8 @@ namespace Hexxagon
 
         void Start();
 
+        void NextMatch();
+
         void Pause();
 
         void End();
@@ -39,9 +41,12 @@ namespace Hexxagon
     public:
         ~Game();
 
-        volatile bool gbStopMath;
-        volatile bool gbUIEnable;
-        volatile int gDelay;
+        ///<Data Contral Match and Game
+        volatile bool   gbGameStarted;
+        volatile bool   gbGameOver;
+        volatile bool   gbStopMath;
+        volatile bool   gbUIEnable;
+        volatile int    gDelay;
 
     private:
         Game();
@@ -52,5 +57,7 @@ namespace Hexxagon
         MatchQueue              m_MatchQueue;
         MapMgr                  m_MapMgr;
         HANDLE                  m_MatchLoopHandle;
+
+        MatchQueue::iterator    itorMatch;
     };
 }

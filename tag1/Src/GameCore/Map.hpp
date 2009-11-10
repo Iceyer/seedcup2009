@@ -10,6 +10,10 @@ namespace Hexxagon
     class MapItem
     {
     public:
+        MapItem()
+        {
+            m_Type = INVALID;
+        }
         enum ItemType
         {
             INVALID = 0,
@@ -40,6 +44,8 @@ namespace Hexxagon
         bool UpdateMap(const Action& action, int FailorInorOut);
 
         const MapItem& GetMapStatus(const int x, const int y) const;
+
+        bool CheckEmptyAround(const int x, const int y) const;
 
         int MapWidth() const;
 

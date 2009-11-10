@@ -83,6 +83,7 @@ void Render::RenderSence()
     }
     /*Init Need Data*/
     Init();
+
     /*Draw Map*/
     CPoint posItem;
     for (int i =0; i < m_iMapWidth; ++i)
@@ -119,6 +120,11 @@ void Render::RenderSence()
         RenderMoveAction(Game::HexxagonGame().CurMatch()->GetCurAction());
     }
 
+    if (Game::HexxagonGame().CurMatch()->IsMatchEnd())
+    {
+        DrawMatchEndInfo();
+    }
+
     /*Draw Game Information*/
     DrawGameInfo();
 }
@@ -141,6 +147,44 @@ void Render::DrawPreScreen()
     m_pDC->SetTextAlign(TA_CENTER | TA_BASELINE);
     m_pDC->TextOut(m_Width / 2, m_Height / 2, _T("Press F5 to Start Game"));
     m_pDC->SelectObject(pOldFont);
+}
+
+void Render::DrawMatchEndInfo()
+{
+    CFont*      pOldFont = m_pDC->SelectObject(&m_PreInfoFont);
+    CPen BluePen(PS_SOLID, 5, gColorBlue);
+    CPen* pOldPen = m_pDC->SelectObject(&BluePen);
+    CBrush GreenBrush(gColorRed);
+    CBrush* pOldBrush = m_pDC->SelectObject(&GreenBrush);
+
+    CRect rcWinInfo(CPoint(300, 260), CPoint(700, 350));
+    m_pDC->FillRect(&rcWinInfo, &GreenBrush);
+    m_pDC->MoveTo(300, 260);
+    m_pDC->LineTo(700, 260);
+    m_pDC->LineTo(700, 350);
+    m_pDC->LineTo(300, 350);
+    m_pDC->LineTo(300, 260);
+
+    m_pDC->SetTextAlign(TA_CENTER);
+    m_pDC->SetTextColor(gColorBlue);
+    CString     strInfo;
+    if (Hexxagon::Game::HexxagonGame().CurMatch()->Winner())
+    {
+        strInfo.Format(_T("%s WIN"), Hexxagon::Game::HexxagonGame().CurMatch()->Winner()->GetName().c_str());
+    }
+    else
+    {
+        strInfo = _T("Draw");
+    }
+
+    m_pDC->TextOut(500, 270, strInfo);
+
+    m_pDC->SelectObject(&m_PlayerInfoFont);
+    m_pDC->SetTextColor(gColorGrey200);
+    m_pDC->TextOut(500, 320, _T("Press F4 For Next Game..."));
+
+    pOldPen = m_pDC->SelectObject(pOldPen);
+    pOldBrush = m_pDC->SelectObject(pOldBrush);
 }
 
 void Render::RenderMoveAction(const Action& curAction)
@@ -243,6 +287,7 @@ void Render::DrawGameInfo()
     CPen* pOldPen = m_pDC->SelectObject(&RedPen);
     CString     strInfo;
 
+    m_pDC->SetTextAlign(TA_LEFT | TA_TOP);
     //画左边的矩形框
     m_pDC->MoveTo(0 + 2, 0 + 2);
     m_pDC->LineTo(Xborder - 2,0 + 2);
@@ -259,7 +304,7 @@ void Render::DrawGameInfo()
     m_pDC->LineTo(Xborder + 3, m_Height - 2);
     m_pDC->LineTo(Xborder + 3, 0 + 2);
 
-    m_pDC->SetTextColor(RGB(200, 200, 200));
+    m_pDC->SetTextColor(gColorGrey200);
     //玩家一信息
     DrawPlayer1(Xoffset, YPos - 10);
     m_pDC->TextOut(Xoffset + 60, YPos, _T("Player1"));

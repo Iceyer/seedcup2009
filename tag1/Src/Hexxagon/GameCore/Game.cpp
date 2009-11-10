@@ -15,6 +15,8 @@ Game Game::m_Game;
 Game::Game()
 {
     gbStopMath = false;
+    gbGameStarted = false;
+    gbGameOver = false;
     gbUIEnable = true;
     gDelay = 200;
 }
@@ -50,7 +52,7 @@ Match* Game::CurMatch() const
 bool Game::Prepare()
 {
 #ifdef _DEBUG
-    return LoadGame("..\\..\\Install\\Save\\DefaultDebug.sav");
+    return LoadGame(std::string("..\\..\\Install\\Save\\DefaultDebug.sav"));
 #else
     return LoadGame(".\\Save\\Default.sav");
 #endif
@@ -58,6 +60,7 @@ bool Game::Prepare()
 
 void Game::Start()
 {
+    gbGameStarted = true;
     //InitMatchQueue
     m_pJudge = new Judge;
     m_pJudge->Prepare();
@@ -88,21 +91,40 @@ void Game::Start()
         }
     }
 
-    m_pCurMatch = *m_MatchQueue.begin();
+    itorMatch = m_MatchQueue.begin();
+    m_pCurMatch = *itorMatch;
     m_MatchLoopHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::Game::MatchLoop, 0 , NULL));
 }
 
 void Game::MatchLoop(void* /*pGame*/)
 {
-    MatchQueue::iterator    itorMatch;
-    for (itorMatch = m_Game.m_MatchQueue.begin(); itorMatch != m_Game.m_MatchQueue.end(); ++itorMatch)
-    {
-        m_Game.m_pCurMatch = *itorMatch;
-        m_Game.m_pCurMatch->Run();
-    }
-    m_Game.m_pJudge->LogGame(m_Game.m_PlayerQueue);
+//     for (itorMatch = m_Game.m_MatchQueue.begin(); itorMatch != m_Game.m_MatchQueue.end(); ++itorMatch)
+//     {
+/*        m_Game.m_pCurMatch = *itorMatch;*/
+    m_Game.gbUIEnable = true;
+    m_Game.m_pCurMatch->Run();
+/*    }*/
 }
 
+void Game::NextMatch()
+{
+    itorMatch++;
+    if (itorMatch != m_Game.m_MatchQueue.end())
+    {
+        m_pCurMatch = *itorMatch;
+        m_MatchLoopHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::Game::MatchLoop, 0 , NULL));
+    }
+    else
+    {
+        if(!gbGameOver)
+        {
+            m_Game.m_pJudge->LogGame(m_Game.m_PlayerQueue);
+        }
+        gbGameOver = true;
+        //GameOver();
+        itorMatch--;
+    }
+}
 void Game::Pause()
 {
 }

@@ -65,6 +65,14 @@ int Judge::CheckAction(const Action& action, int PlayerType)
     return 0;
 }
 
+
+bool Judge::CheckPlayerEnable(int PlayerID)
+{
+    bool ret = false;
+    PlayerID;
+    return ret;
+}
+
 bool Judge::IsPlayerCanAction(int PlayerID)
 {
     PlayerID;
@@ -115,7 +123,7 @@ void Judge::Prepare()
 {
     std::ofstream ofResultFile;
 
-    ofResultFile.open(".\\Result.txt", std::ios::out | std::ios::ate);
+    ofResultFile.open(".\\Log.txt", std::ios::out | std::ios::ate);
 
     if (!ofResultFile.is_open())
     {
@@ -128,7 +136,7 @@ void Judge::LogMatch(Map* pMap, Player* pPlayer1, Player* pPlayer2)
 {
     std::ofstream ofResultFile;
 
-    ofResultFile.open(".\\Result.txt", std::ios::out | std::ios::app);
+    ofResultFile.open(".\\Log.txt", std::ios::out | std::ios::app);
 
     if (!ofResultFile.is_open())
     {
@@ -157,7 +165,7 @@ void Judge::LogGame(const PlayerQueue& playerQueue)
 {
     std::ofstream ofResultFile;
 
-    ofResultFile.open(".\\Result.txt", std::ios::out | std::ios::app);
+    ofResultFile.open(".\\Log.txt", std::ios::out | std::ios::app);
 
     if (!ofResultFile.is_open())
     {

@@ -230,6 +230,9 @@ void CHexxagonDlg::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
     case VK_F3:
         DisableUI();
         break;
+    case VK_F4:
+        NextMatch();
+        break;
     case VK_F5:
         StartGame();
         break;
@@ -241,16 +244,22 @@ void CHexxagonDlg::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CHexxagonDlg::StartGame()
 {
-    if (Hexxagon::Game::HexxagonGame().Prepare())
+    if (Hexxagon::Game::HexxagonGame().Prepare() && !Hexxagon::Game::HexxagonGame().gbGameStarted)
     {
         Hexxagon::Game::HexxagonGame().Start();
     }
 }
-
+void CHexxagonDlg::NextMatch()
+{
+    if (Hexxagon::Game::HexxagonGame().gbGameStarted && Hexxagon::Game::HexxagonGame().CurMatch()->IsMatchEnd())
+    {
+        Hexxagon::Game::HexxagonGame().NextMatch();
+    }
+}
 void CHexxagonDlg::DisableUI()
 {
     EnterCriticalSection(&m_Critical);
-    Hexxagon::Game::HexxagonGame().gbUIEnable = false;
-    Render::SRender().m_bMoveAction = false;
+    Hexxagon::Game::HexxagonGame().gbUIEnable = !Hexxagon::Game::HexxagonGame().gbUIEnable;
+    //Render::SRender().m_bMoveAction = Hexxagon::Game::HexxagonGame().gbUIEnable;
     LeaveCriticalSection(&m_Critical);
 }

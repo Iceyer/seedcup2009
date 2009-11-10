@@ -46,6 +46,13 @@ Player::Player(const std::string& DllPath)
     m_Name = pFuncPlayerName();
 
     m_pActionFunc = (pGetPlayerActionFunc)GetProcAddress(m_HINST, strGetPlayerAction.c_str());
+
+    pSetPlayer pSetPlayerFunc = NULL;
+    pSetPlayerFunc = (pSetPlayer)GetProcAddress(m_HINST, strSetPlayerFunc.c_str());
+    if(pSetPlayerFunc)
+    {
+        pSetPlayerFunc(this);
+    }
 }
 
 Player::~Player()

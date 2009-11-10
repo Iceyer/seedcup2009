@@ -34,6 +34,7 @@ public:
 public:
     static CHexxagonDlg *Myself();
     void StartGame();
+    void NextMatch();
     void DisableUI();
 
     /// й╣ож

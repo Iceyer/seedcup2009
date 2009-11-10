@@ -26,19 +26,31 @@ namespace Hexxagon
 
         const Action& GetCurAction();
 
+        /*
+         * out @ 0 = Invade
+         *       1 = Copy
+                 2 = Move
+         */
         int GetActionType();
 
         const Judge& GetJudge();
 
         const Map&  GetMap();
 
+        bool IsMatchEnd();
+
+        Player* Winner();
+
     private:
         Map*        m_pMap;
         Player*     m_pPlayer1;
         Player*     m_pPlayer2;
+        Player*     m_pWiner;
         Player*     m_pCurActionPlayer;
         Judge*      m_pJudge;
         int         m_ActionType; /*! 0 = Invade, 1 =  copy 2 Move*/
         Action      m_CurAction;
+
+        bool        m_bMatchEnd;
     };
 }
