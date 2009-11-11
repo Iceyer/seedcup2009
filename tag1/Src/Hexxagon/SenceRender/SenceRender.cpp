@@ -311,12 +311,12 @@ void Render::DrawGameInfo()
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
     YPos += 30;
-    m_pDC->TextOut(Xoffset, YPos, Game::HexxagonGame().CurMatch()->GetPlayer(MapItem::PLayer1).GetName().c_str());
+    m_pDC->TextOut(Xoffset + 20, YPos, Game::HexxagonGame().CurMatch()->GetPlayer(MapItem::PLayer1).GetName().c_str());
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Score:"));
     strInfo.Format(_T("%d"), Game::HexxagonGame().CurMatch()->GetJudge().GetScore(MapItem::PLayer1));
     YPos += 30;
-    m_pDC->TextOut(Xoffset, YPos, strInfo);
+    m_pDC->TextOut(Xoffset + 20, YPos, strInfo);
     YPos += 60;
     //玩家二信息
     DrawPlayer2(Xoffset, YPos - 10);
@@ -324,12 +324,12 @@ void Render::DrawGameInfo()
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Name:"));
     YPos += 30;
-    m_pDC->TextOut(Xoffset, YPos, Game::HexxagonGame().CurMatch()->GetPlayer(MapItem::PLayer2).GetName().c_str());
+    m_pDC->TextOut(Xoffset + 20, YPos, Game::HexxagonGame().CurMatch()->GetPlayer(MapItem::PLayer2).GetName().c_str());
     YPos += 30;
     m_pDC->TextOut(Xoffset, YPos, _T("Score:"));
     strInfo.Format(_T("%d"), Game::HexxagonGame().CurMatch()->GetJudge().GetScore(MapItem::PLayer2));
     YPos += 30;
-    m_pDC->TextOut(Xoffset, YPos, strInfo);
+    m_pDC->TextOut(Xoffset + 20, YPos, strInfo);
     //书写帮助信息
     YPos += 60;
     m_pDC->TextOut(Xoffset, YPos, _T("Press F2"));

@@ -156,7 +156,7 @@ void Judge::LogMatch(Map* pMap, Player* pPlayer1, Player* pPlayer2)
     else
     {
         ofResultFile<<"Winner:"<<std::endl
-                    <<"Player2"<<pPlayer2->GetName()<<std::endl<<std::endl;
+                    <<"Player2:"<<pPlayer2->GetName()<<std::endl<<std::endl;
     }
     ofResultFile.close();
 }
