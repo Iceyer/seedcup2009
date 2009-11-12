@@ -26,13 +26,6 @@ int GetMapHeight()
     return  gpCurMap->MapHeigth();
 }
 
-/*
-**输入：x、y表示地图上的x、y 坐标
-**返回值：0 表示坐标无效
-**        1 表示该坐标为空，可以放置棋子
-**        2 表示该坐标已被选手一的棋子占据
-**        3 表示该坐标已被选手二的棋子占据
-*/
 int GetMapStatus(int x, int y)
 {
     return  gpCurMap->GetMapStatus(x, y).m_Type;
