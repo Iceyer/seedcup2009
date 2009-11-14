@@ -36,6 +36,7 @@ public:
     void StartGame();
     void NextMatch();
     void DisableUI();
+    void ShowHelpInfo();
 
     /// й╣ож
 protected:

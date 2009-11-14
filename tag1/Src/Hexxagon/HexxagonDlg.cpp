@@ -225,7 +225,7 @@ void CHexxagonDlg::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
     switch (nChar)
     {
     case VK_F2:
-        MessageBox(_T("Don't Ask Me! I DON'T Know Anything ..."));
+        ShowHelpInfo();
         break;
     case VK_F3:
         DisableUI();
@@ -267,4 +267,15 @@ void CHexxagonDlg::DisableUI()
     Hexxagon::Game::HexxagonGame().gbUIEnable = !Hexxagon::Game::HexxagonGame().gbUIEnable;
     //Render::SRender().m_bMoveAction = Hexxagon::Game::HexxagonGame().gbUIEnable;
     LeaveCriticalSection(&m_Critical);
+}
+
+void CHexxagonDlg::ShowHelpInfo()
+{
+    CString str;
+    str = _T("F2 : Show Help Info\n");
+    str += _T("F3 : Accelerate The Game\n");
+    str += _T("F4 : Next Match\n");
+    str += _T("F5 : Start The Game\n");
+    str += _T("F6 : Show/Hide Result\n");
+    MessageBox(str);
 }
