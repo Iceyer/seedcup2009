@@ -178,7 +178,7 @@ bool Game::LoadGame(std::string strSaveFileName)
     //Map cnt must >= 1
     if (m_MapMgr.MapCnt() < 1 || m_PlayerQueue.size() < 2)
     {
-        MessageBox(NULL, _T("加载地图或选手AI失败"), NULL, 0);
+        MessageBox(NULL, _T("加载地图或选手AI失败,游戏无法正常进行"), NULL, 0);
         return false;
     }
     return true;
@@ -190,6 +190,9 @@ bool Game::LoadPlayer(std::string DllPath)
     Player* pNewPlayer = new Player(DllPath);
 
     //Add a Player
-    m_PlayerQueue.push_back(pNewPlayer);
+	if(pNewPlayer->isActive())
+	{
+		m_PlayerQueue.push_back(pNewPlayer);
+	}
     return  true;
 }

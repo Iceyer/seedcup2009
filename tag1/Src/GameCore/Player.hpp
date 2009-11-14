@@ -59,6 +59,11 @@ namespace Hexxagon
 
         int TotalMatchCnt();
 
+		bool isActive()
+		{
+			return NULL == m_HINST ? false : true ;
+		}
+
         Action GetAction(void) const;
 
     protected:
