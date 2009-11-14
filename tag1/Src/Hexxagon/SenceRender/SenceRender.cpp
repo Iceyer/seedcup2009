@@ -16,6 +16,7 @@ using namespace Hexxagon;
 Render::Render()
 : m_bMoveAction(false)
 , m_bMoving(false)
+, m_showResult(true)
 {
     LOGFONT                 font;
     font.lfHeight           = - 20;
@@ -120,7 +121,7 @@ void Render::RenderSence()
         RenderMoveAction(Game::HexxagonGame().CurMatch()->GetCurAction());
     }
 
-    if (Game::HexxagonGame().CurMatch()->IsMatchEnd())
+    if (Game::HexxagonGame().CurMatch()->IsMatchEnd() && m_showResult)
     {
         DrawMatchEndInfo();
     }
@@ -148,6 +149,12 @@ void Render::DrawPreScreen()
     m_pDC->TextOut(m_Width / 2, m_Height / 2, _T("Press F5 to Start Game"));
     m_pDC->SelectObject(pOldFont);
 }
+
+void Render::ShowResultSwitch()
+{
+    m_showResult = !m_showResult;
+}
+
 
 void Render::DrawMatchEndInfo()
 {
@@ -181,7 +188,14 @@ void Render::DrawMatchEndInfo()
 
     m_pDC->SelectObject(&m_PlayerInfoFont);
     m_pDC->SetTextColor(gColorGrey200);
-    m_pDC->TextOut(500, 320, _T("Press F4 For Next Game..."));
+    if (Hexxagon::Game::HexxagonGame().gbGameOver)
+    {
+        m_pDC->TextOut(500, 320, _T("ALL MATCH OVER!PRESS ESC TO EXIT..."));
+    } 
+    else
+    {
+        m_pDC->TextOut(500, 320, _T("Press F4 For Next Match..."));
+    }
 
     pOldPen = m_pDC->SelectObject(pOldPen);
     pOldBrush = m_pDC->SelectObject(pOldBrush);

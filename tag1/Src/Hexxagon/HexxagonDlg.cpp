@@ -235,6 +235,10 @@ void CHexxagonDlg::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
         break;
     case VK_F5:
         StartGame();
+        break;    
+    case VK_F6:
+        Render::SRender().ShowResultSwitch();
+        Invalidate(TRUE);
         break;
     default:
         break;
@@ -255,6 +259,7 @@ void CHexxagonDlg::NextMatch()
     {
         Hexxagon::Game::HexxagonGame().NextMatch();
     }
+    Invalidate(TRUE);
 }
 void CHexxagonDlg::DisableUI()
 {

@@ -53,11 +53,11 @@ public:
 
     void DrawHexagon(int cx, int cy, unsigned BitmapID, unsigned BkBitmapID, Hexxagon::MapItem::ItemType iType = Hexxagon::MapItem::EMPTY);
 
-    void Render::DrawPlayer1(int cx, int cy);
+    void DrawPlayer1(int cx, int cy);
     
-    void Render::DrawPlayer2(int cx, int cy);
+    void DrawPlayer2(int cx, int cy);
 
-
+    void ShowResultSwitch();
 private:
     Render();
 
@@ -81,4 +81,5 @@ private:
 public:
     bool    m_bMoveAction;
     bool    m_bMoving;
+    bool    m_showResult;
 };
