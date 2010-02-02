@@ -2,6 +2,7 @@
 
 #include "..\Player\PlayerAction.hpp"
 #include <vector>
+//#include <list>
 
 namespace Hexxagon
 {
@@ -9,6 +10,10 @@ namespace Hexxagon
     class MapItem
     {
     public:
+        MapItem()
+        {
+            m_Type = INVALID;
+        }
         enum ItemType
         {
             INVALID = 0,
@@ -16,11 +21,11 @@ namespace Hexxagon
             PLayer1 = 2,
             PLayer2 = 3,
         };
-        int      m_Type;
-        unsigned int X;
-        unsigned int Y;
-    private:
-        void * m_pOwener;
+        ItemType     m_Type;
+        //unsigned int X;
+        //unsigned int Y;
+    //private:
+       // void * m_pOwener;
     };
 
     class Map
@@ -31,38 +36,51 @@ namespace Hexxagon
         ~Map();
 
         bool LoadMap(std::string strMapFileName);
+        
+        void ReLoadMap();
 
         bool SaveMap(std::string strMapFileName);
 
-        bool UpdateMap(const Action& action);
+        bool UpdateMap(const Action& action, int FailorInorOut);
 
         const MapItem& GetMapStatus(const int x, const int y) const;
 
-        int MapWidth();
+        bool CheckEmptyAround(const int x, const int y) const;
 
-        int MapHeigth();
+        int MapWidth() const;
 
+        int MapHeigth() const;
+
+        const std::string& MapFilePath() const;
     private:
-        MapItem *m_pData;
-        int     m_iMapWidth;
-        int     m_iMapHeight;
+        MapItem*        m_pData;
+        MapItem*        m_pOrgData;
+        int             m_iMapWidth;
+        int             m_iMapHeight;
+        std::string     m_strMapFileName;
     };
 
     class MapMgr
     {
     public:
+        typedef std::vector<Map*>           MapList;
+        typedef MapList::iterator           MapItor;
+        typedef MapList::const_iterator     MapConstItor;
+
         MapMgr();
 
         ~MapMgr();
 
-        Map* CurMap();
+        MapItor Begin();
 
-        void SetCurMap(Map* map);
+        MapItor End();
+
+        int MapCnt() const;
 
         Map* AddMap(std::string strMapFileName);
+
     private:
-        Map*                    m_pCurMap;
-        std::vector<Map*>       m_MapList;
+        MapList       m_MapList;
     };
 
 }

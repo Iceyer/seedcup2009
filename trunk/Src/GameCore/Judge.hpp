@@ -1,6 +1,7 @@
 #pragma once
 
 #include "..\Player\PlayerAction.hpp"
+#include "Player.hpp"
 #include "Map.hpp"
 
 namespace Hexxagon
@@ -9,15 +10,30 @@ namespace Hexxagon
     {
     public:
         Judge();
-        Judge(Map* pMapMgr);
+
         ~Judge();
 
-        void Prepare(Map* pMap);
+        void Prepare();
 
-        bool CheckAction(const Action& action, int PlayerType);
+        void EnterMatch(Map* pMap);
+
+        int CheckAction(const Action& action, int PlayerID);
+
+        bool CheckPlayerEnable(int PlayerID);
+
+        bool IsPlayerCanAction(int PlayerID);
+
+        int GetScore(int PlayerID) const;
 
         bool IsGameEnd();
+
+        void LogMatch(Map* pMap, Player* pPlayer1, Player* pPlayer2);
+
+        void LogGame(const PlayerQueue& playerQueue);
     private:
         Map  *m_pMap;
+        int  m_totalHoles;
+        int  m_stonesOfPlayer1;
+        int  m_stonesOfPlayer2;
     };
 }

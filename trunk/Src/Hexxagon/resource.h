@@ -7,8 +7,14 @@
 #define IDS_ABOUTBOX                    101
 #define IDD_HEXXAGON_DIALOG             102
 #define IDR_MAINFRAME                   128
-#define IDB_BITMAP1                     129
-#define IDB_BITMAP2                     130
+#define IDB_EMPTY_HOLE                  129
+#define IDB_HOLE_BK                     130
+#define IDB_BLUE_HOLE                   131
+#define IDB_RED_HOLE                    132
+#define IDB_BLUE_STONE                  134
+#define IDB_RED_STONE                   135
+#define IDB_STONE_BK                    136
+#define IDB_BITMAPICON                  138
 #define IDC_CUSTOM1                     1000
 #define IDC_VIEWS                       1000
 
@@ -16,7 +22,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        131
+#define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         32771
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101
