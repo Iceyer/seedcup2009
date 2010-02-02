@@ -45,14 +45,14 @@ END_MESSAGE_MAP()
 
 // CHexxagonDlg 对话框
 
-
-
+CHexxagonDlg* CHexxagonDlg::m_pSelf;
 
 CHexxagonDlg::CHexxagonDlg(CWnd* pParent /*=NULL*/)
 : CDialog(CHexxagonDlg::IDD, pParent)
 {
     m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
     memset(&m_Critical, 0, sizeof(CRITICAL_SECTION));
+    m_pSelf = this;
 }
 
 CHexxagonDlg::~CHexxagonDlg()
@@ -71,6 +71,8 @@ BEGIN_MESSAGE_MAP(CHexxagonDlg, CDialog)
     ON_WM_QUERYDRAGICON()
     //}}AFX_MSG_MAP
     ON_WM_ERASEBKGND()
+    ON_WM_DESTROY()
+    ON_WM_KEYUP()
 END_MESSAGE_MAP()
 
 
@@ -100,6 +102,7 @@ BOOL CHexxagonDlg::OnInitDialog()
 
     // 设置此对话框的图标。当应用程序主窗口不是对话框时，框架将自动
     //  执行此操作
+    m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
     SetIcon(m_hIcon, TRUE);         // 设置大图标
     SetIcon(m_hIcon, FALSE);        // 设置小图标
 
@@ -107,10 +110,7 @@ BOOL CHexxagonDlg::OnInitDialog()
     SetWindowPos(NULL, 0, 0, 800, 600, SWP_SHOWWINDOW);
     ::InitializeCriticalSection(&m_Critical);
 
-    Hexxagon::Game::HexxagonGame().Prepare();
-    Hexxagon::Game::HexxagonGame().Start();
-
-    return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
+    return  FALSE;
 }
 
 void CHexxagonDlg::OnSysCommand(UINT nID, LPARAM lParam)
@@ -204,4 +204,78 @@ BOOL CHexxagonDlg::OnEraseBkgnd(CDC* pDC)
 {
     //return CDialog::OnEraseBkgnd(pDC);
     return TRUE;
+}
+
+CHexxagonDlg* CHexxagonDlg::Myself()
+{
+    return m_pSelf;
+}
+void CHexxagonDlg::OnDestroy()
+{
+    CDialog::OnDestroy();
+    EnterCriticalSection(&m_Critical);
+    Hexxagon::Game::HexxagonGame().gbStopMath = true;
+    LeaveCriticalSection(&m_Critical);
+    Hexxagon::Game::HexxagonGame().End();
+}
+
+void CHexxagonDlg::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
+    // TODO: 在此添加消息处理程序代码和/或调用默认值
+    switch (nChar)
+    {
+    case VK_F2:
+        ShowHelpInfo();
+        break;
+    case VK_F3:
+        DisableUI();
+        break;
+    case VK_F4:
+        NextMatch();
+        break;
+    case VK_F5:
+        StartGame();
+        break;    
+    case VK_F6:
+        Render::SRender().ShowResultSwitch();
+        Invalidate(TRUE);
+        break;
+    default:
+        break;
+    }
+    CDialog::OnKeyUp(nChar, nRepCnt, nFlags);
+}
+
+void CHexxagonDlg::StartGame()
+{
+    if (Hexxagon::Game::HexxagonGame().Prepare() && !Hexxagon::Game::HexxagonGame().gbGameStarted)
+    {
+        Hexxagon::Game::HexxagonGame().Start();
+    }
+}
+void CHexxagonDlg::NextMatch()
+{
+    if (Hexxagon::Game::HexxagonGame().gbGameStarted && Hexxagon::Game::HexxagonGame().CurMatch()->IsMatchEnd())
+    {
+        Hexxagon::Game::HexxagonGame().NextMatch();
+    }
+    Invalidate(TRUE);
+}
+void CHexxagonDlg::DisableUI()
+{
+    EnterCriticalSection(&m_Critical);
+    Hexxagon::Game::HexxagonGame().gbUIEnable = !Hexxagon::Game::HexxagonGame().gbUIEnable;
+    //Render::SRender().m_bMoveAction = Hexxagon::Game::HexxagonGame().gbUIEnable;
+    LeaveCriticalSection(&m_Critical);
+}
+
+void CHexxagonDlg::ShowHelpInfo()
+{
+    CString str;
+    str = _T("F2 : Show Help Info\n");
+    str += _T("F3 : Accelerate The Game\n");
+    str += _T("F4 : Next Match\n");
+    str += _T("F5 : Start The Game\n");
+    str += _T("F6 : Show/Hide Result\n");
+    MessageBox(str);
 }

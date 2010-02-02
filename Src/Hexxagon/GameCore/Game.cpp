@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include <process.h>
-#include <windows.h>
 
 #include "Game.hpp"
-#include "..\..\GameCore\Judge.hpp"
 #include "..\..\Player\PlayerAction.hpp"
-#include "Match.hpp"
+
+CRITICAL_SECTION m_Critical;
 
 #include <fstream>
 
@@ -15,62 +14,141 @@ Game Game::m_Game;
 
 Game::Game()
 {
+    gbStopMath = false;
+    gbGameStarted = false;
+    gbGameOver = false;
+    gbUIEnable = true;
+    gDelay = 200;
 }
 
 Game::~Game()
 {
-}
-
-void Game::Prepare()
-{
-<<<<<<< .mine
-    if (!m_MapMgr.LoadMap("..\\..\\Install\\Map\\Default.map"))
+    m_pCurMatch = NULL;
+    MatchQueue::iterator    itorMatch;
+    itorMatch = m_MatchQueue.begin();
+    for (; itorMatch != m_MatchQueue.end(); ++itorMatch)
     {
-        MessageBox(NULL,_T("无法找到要加载的地图"),_T("地图加载错误"),MB_OK);
-        return;
+        delete *itorMatch;
     }
-    
-    LoadPlayer();
-=======
-#ifdef _DEBUG
-    LoadGame("..\\..\\Install\\Save\\DefaultDebug.sav");
-#else
-    LoadGame(".\\Save\\Default.sav");
-#endif
->>>>>>> .r8
+
+    if (m_pJudge)
+    {
+        delete m_pJudge; 
+        m_pJudge = NULL;
+    }
+
+     PlayerQueue::iterator itor = m_PlayerQueue.begin();
+    for (; itor != m_PlayerQueue.end(); ++itor)
+    {
+        delete *itor;
+    }
 }
 
+Match* Game::CurMatch() const
+{
+    return m_pCurMatch;
+}
+
+bool Game::Prepare()
+{
+#ifdef _DEBUG
+    return LoadGame(std::string("..\\..\\Install\\Save\\DefaultDebug.sav"));
+#else
+    return LoadGame(".\\Save\\Default.sav");
+#endif
+}
 
 void Game::Start()
 {
-    /*GameLoop*/
-    Judge* pJudge = new Judge(m_MapMgr.CurMap());
-    std::vector<Player*>::iterator      itorCurPlayer;
-    itorCurPlayer = m_PlayerQueue.begin();
-    Player* pPlayer1 = (*itorCurPlayer++);
-    Player* pPlayer2 = (*itorCurPlayer);
+    gbGameStarted = true;
+    //InitMatchQueue
+    m_pJudge = new Judge;
+    m_pJudge->Prepare();
 
-    Match* pCurMatch = new Match(m_MapMgr.CurMap(), pPlayer1, pPlayer2, pJudge);
-    _beginthread(Hexxagon::RunMatch, 0 , pCurMatch);
+    PlayerQueue::iterator      itorPlayer1;
+    PlayerQueue::iterator      itorPlayer2;
+    MapMgr::MapItor             itorMap;
+    for (itorMap = m_MapMgr.Begin(); itorMap != m_MapMgr.End(); ++itorMap)
+    {
+        itorPlayer1 = m_Game.m_PlayerQueue.begin();
+        for (; itorPlayer1 != m_PlayerQueue.end(); ++itorPlayer1)
+        {
+            itorPlayer2 = itorPlayer1;
+            ++itorPlayer2;
+            for (; itorPlayer2 != m_PlayerQueue.end(); ++itorPlayer2)
+            {
+                m_pCurMatch = new Match(*itorMap,
+                                        *itorPlayer1,
+                                        *itorPlayer2,
+                                        m_pJudge);
+                m_MatchQueue.push_back(m_pCurMatch);
+                m_pCurMatch = new Match(*itorMap,
+                                        *itorPlayer2,
+                                        *itorPlayer1,
+                                        m_pJudge);
+                m_MatchQueue.push_back(m_pCurMatch);
+            }
+        }
+    }
+
+    itorMatch = m_MatchQueue.begin();
+    m_pCurMatch = *itorMatch;
+    m_MatchLoopHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::Game::MatchLoop, 0 , NULL));
 }
 
+void Game::MatchLoop(void* /*pGame*/)
+{
+//     for (itorMatch = m_Game.m_MatchQueue.begin(); itorMatch != m_Game.m_MatchQueue.end(); ++itorMatch)
+//     {
+/*        m_Game.m_pCurMatch = *itorMatch;*/
+    m_Game.gbUIEnable = true;
+    m_Game.m_pCurMatch->Run();
+/*    }*/
+}
+
+void Game::NextMatch()
+{
+    itorMatch++;
+    if (itorMatch != m_Game.m_MatchQueue.end())
+    {
+        m_pCurMatch = *itorMatch;
+        m_MatchLoopHandle = reinterpret_cast<HANDLE>(_beginthread(Hexxagon::Game::MatchLoop, 0 , NULL));
+    }
+    else
+    {
+        if(!gbGameOver)
+        {
+            m_Game.m_pJudge->LogGame(m_Game.m_PlayerQueue);
+        }
+        gbGameOver = true;
+        //GameOver();
+        itorMatch--;
+    }
+}
 void Game::Pause()
 {
-
 }
 
 void Game::End()
 {
-
+    if (m_pCurMatch)
+    {
+        WaitForSingleObject(m_MatchLoopHandle, INFINITE);
+    }
 }
 
 bool Game::LoadGame(std::string strSaveFileName)
 {
     using   std::string;
-    //Get GameSave File
     using   std::ifstream;
+    //Get GameSave File
     ifstream    SaveFile;
+
     SaveFile.open(strSaveFileName.c_str(), std::ios::in);
+    if (!SaveFile.is_open())
+    {
+        return false;
+    }
 
     string  key;
     string  val;
@@ -84,15 +162,24 @@ bool Game::LoadGame(std::string strSaveFileName)
         key = line.substr(0, pos);
         val = line.substr(pos + 2, line.length() - pos - 3);
 
-        if (!key.compare("Player1") || !key.compare("Player2"))
+        if (!key.compare("Player"))
         {
             LoadPlayer(val);
         }
 
         if (!key.compare("Map"))
         {
-          m_MapMgr.SetCurMap(m_MapMgr.AddMap(val));
+          m_MapMgr.AddMap(val);
         }
+    }
+    SaveFile.close();
+
+    //Player cnt must >= 2
+    //Map cnt must >= 1
+    if (m_MapMgr.MapCnt() < 1 || m_PlayerQueue.size() < 2)
+    {
+        MessageBox(NULL, _T("加载地图或选手AI失败,游戏无法正常进行"), NULL, 0);
+        return false;
     }
     return true;
 }
@@ -101,7 +188,11 @@ bool Game::LoadPlayer(std::string DllPath)
 {
     //Load dll
     Player* pNewPlayer = new Player(DllPath);
+
     //Add a Player
-    m_PlayerQueue.push_back(pNewPlayer);
+	if(pNewPlayer->isActive())
+	{
+		m_PlayerQueue.push_back(pNewPlayer);
+	}
     return  true;
 }

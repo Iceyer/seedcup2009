@@ -7,17 +7,6 @@
 
 namespace Hexxagon
 {
-<<<<<<< .mine
-    enum Direction
-    {
-        UP,         //上
-        DOWN,       //下
-        LEFTUP,     //左上
-        LEFTDOWN,   //左下
-        RIGHTUP,    //右上
-        RIGHTDOWN,  //右下
-    };
-=======
 //     enum Direction
 //     {
 //         UP,
@@ -34,7 +23,6 @@ namespace Hexxagon
 //         int         YPos;
 //         Direction   Direct;
 //     };
->>>>>>> .r8
 
     class Player
     {
@@ -49,13 +37,32 @@ namespace Hexxagon
 
         void SetName(std::string name);
 
-        std::string GetName();
+        const std::string& GetName() const;
 
         void SetPlayerID(int id);
 
         int GetPlayerID() const;
 
-        void Prepare(Map* pMap);
+        void EnterMatch(Map* pMap);
+
+        void WinMatch();
+
+        void LoseMatch();
+
+        void DrawMatch();
+
+        int WinMatchCnt();
+
+        int LoseMatchCnt();
+
+        int DrawMatchCnt();
+
+        int TotalMatchCnt();
+
+		bool isActive()
+		{
+			return NULL == m_HINST ? false : true ;
+		}
 
         Action GetAction(void) const;
 
@@ -63,9 +70,16 @@ namespace Hexxagon
         void SetActionFunc(pGetPlayerActionFunc pFunc);
 
     private:
-        HINSTANCE m_HINST;
+        HINSTANCE               m_HINST;
         std::string             m_Name;
         int                     m_ID;
         pGetPlayerActionFunc    m_pActionFunc;
+
+        unsigned int            m_WinMatchCnt;      ///< the win match count
+        unsigned int            m_LoseMatchCnt;     ///< the lose count
+        unsigned int            m_DrawMatchCnt;     ///< the draw match count
+        unsigned int            m_TotalMatchCnt;    ///< the total count
     };
+
+    typedef std::vector<Player*>    PlayerQueue;
 }

@@ -1,3 +1,4 @@
-Map="..\..\Install\Map\Default.map"
-Player1="..\..\Install\Player\Player.dll"
-Player2="..\..\Install\Player\Player.dll"
+Map="..\..\Install\Map\1.map"
+Map="..\..\Install\Map\2.map"
+Player="..\..\Install\Player\Player.dll"
+Player="..\..\Install\Player\Player.dll"
